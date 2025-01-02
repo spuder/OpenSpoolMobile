@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -11,8 +11,8 @@ import {
   Modal,
 } from 'react-native';
 
-const filamentTypes = ['PxLA', 'PETG', 'ABS', 'TPU', 'Nylon'];
-const filamentBrands = ['Prusament', 'Overture', 'Hatchbox', 'eSUN', 'Polymaker'];
+const filamentTypes = ['PLA', 'PETG', 'ABS', 'TPU', 'Nylon'];
+const filamentBrands = ['Generic', 'Prusament', 'Overture', 'Hatchbox', 'eSUN'];
 
 function Dropdown({ title, options, selected, onSelect }: {
   title: string;
@@ -25,7 +25,7 @@ function Dropdown({ title, options, selected, onSelect }: {
 
   return (
     <View style={styles.dropdownContainer}>
-      <Text style={styles.dropdownLabel}>{title}</Text>
+      <Text style={[styles.dropdownLabel, { color: isDarkMode ? '#fff' : '#000' }]}>{title}</Text>
       <Pressable
         style={[styles.dropdown, { backgroundColor: isDarkMode ? '#333' : '#eee' }]}
         onPress={() => setModalVisible(true)}>
@@ -65,7 +65,18 @@ function Dropdown({ title, options, selected, onSelect }: {
 function App(): React.JSX.Element {
   const [filamentType, setFilamentType] = useState(filamentTypes[0]);
   const [filamentBrand, setFilamentBrand] = useState(filamentBrands[0]);
+  const [jsonOutput, setJsonOutput] = useState('');
   const isDarkMode = useColorScheme() === 'dark';
+
+  useEffect(() => {
+    const output = {
+      protocol: "OpenSpool",
+      version: "1.0",
+      brand: filamentBrand,
+      type: filamentType
+    };
+    setJsonOutput(JSON.stringify(output, null, 2));
+  }, [filamentType, filamentBrand]);
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? '#000' : '#fff',
@@ -97,6 +108,14 @@ function App(): React.JSX.Element {
             selected={filamentBrand}
             onSelect={setFilamentBrand}
           />
+          <View style={[styles.jsonContainer, { backgroundColor: isDarkMode ? '#333' : '#f5f5f5' }]}>
+            <Text style={[styles.jsonTitle, { color: isDarkMode ? '#fff' : '#000' }]}>
+              Generated JSON
+            </Text>
+            <Text style={[styles.jsonOutput, { color: isDarkMode ? '#fff' : '#000' }]}>
+              {jsonOutput}
+            </Text>
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -159,6 +178,20 @@ const styles = StyleSheet.create({
   },
   optionText: {
     fontSize: 16,
+  },
+  jsonContainer: {
+    marginTop: 20,
+    padding: 15,
+    borderRadius: 8,
+  },
+  jsonTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    marginBottom: 10,
+  },
+  jsonOutput: {
+    fontFamily: 'monospace',
+    fontSize: 14,
   },
 });
 
