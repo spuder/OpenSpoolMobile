@@ -62,15 +62,9 @@ const OpenSpool = () => {
         <Text style={styles.title}>OpenSpool</Text>
 
         <View style={styles.circleContainer}>
-          <TouchableOpacity style={styles.navigationButton}>
-            <Text style={styles.navigationIcon}>◀</Text>
-          </TouchableOpacity>
           <View style={[styles.circle, {
             backgroundColor: colors.find(c => c.value === color)?.hex || color
           }]} />
-          <TouchableOpacity style={styles.navigationButton}>
-            <Text style={styles.navigationIcon}>▶</Text>
-          </TouchableOpacity>
         </View>
 
         <View style={styles.fieldsContainer}>
@@ -161,14 +155,13 @@ const OpenSpool = () => {
   );
 };
 
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#1a1a1a',
-    justifyContent: 'center',
   },
   card: {
+    flex: 1,
     backgroundColor: '#2d2d2d',
     margin: 16,
     borderRadius: 12,
@@ -194,7 +187,6 @@ const styles = StyleSheet.create({
 
   },
   circleContainer: {
-    flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 24,
@@ -210,6 +202,7 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     borderRadius: 60, // Exactly half of width/height
+    alignContent: 'center',
     backgroundColor: 'black',
     overflow: 'hidden', // This helps with some rendering artifacts[5]
     ...Platform.select({
