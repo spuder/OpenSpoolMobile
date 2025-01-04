@@ -16,6 +16,7 @@ const OpenSpool = () => {
   const [maxTemp, setMaxTemp] = useState('210');
 
   const colors = [
+    { label: 'Pink', value: 'pink', hex: '#ea338d' },
     { label: 'Black', value: 'black', hex: '#000000' },
     { label: 'White', value: 'white', hex: '#FFFFFF' },
     { label: 'Yellow', value: 'yellow', hex: '#FFEB3B' },
@@ -53,18 +54,20 @@ const OpenSpool = () => {
       </View>
     );
   };
-  
+
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.card}>
         <Text style={styles.title}>OpenSpool</Text>
-        
+
         <View style={styles.circleContainer}>
           <TouchableOpacity style={styles.navigationButton}>
             <Text style={styles.navigationIcon}>◀</Text>
           </TouchableOpacity>
-          <View style={[styles.circle, { backgroundColor: color }]} />
+          <View style={[styles.circle, {
+            backgroundColor: colors.find(c => c.value === color)?.hex || color
+          }]} />
           <TouchableOpacity style={styles.navigationButton}>
             <Text style={styles.navigationIcon}>▶</Text>
           </TouchableOpacity>
@@ -83,6 +86,8 @@ const OpenSpool = () => {
               value={color}
               onChange={item => setColor(item.value)}
               renderItem={renderColorItem}
+              placeholderStyle={{ color: '#999' }}
+              selectedTextStyle={{ color: '#ffffff' }}
             />
           </View>
 
@@ -97,6 +102,8 @@ const OpenSpool = () => {
               placeholder="Select type"
               value={type}
               onChange={item => setType(item.value)}
+              placeholderStyle={{ color: '#999' }}
+              selectedTextStyle={{ color: '#ffffff' }}
             />
           </View>
 
@@ -112,6 +119,8 @@ const OpenSpool = () => {
                 placeholder="Min temp"
                 value={minTemp}
                 onChange={item => setMinTemp(item.value)}
+                placeholderStyle={{ color: '#999' }}
+                selectedTextStyle={{ color: '#ffffff' }}
               />
             </View>
 
@@ -126,19 +135,21 @@ const OpenSpool = () => {
                 placeholder="Max temp"
                 value={maxTemp}
                 onChange={item => setMaxTemp(item.value)}
+                placeholderStyle={{ color: '#999' }}
+                selectedTextStyle={{ color: '#ffffff' }}
               />
             </View>
           </View>
         </View>
 
         <View style={styles.buttonContainer}>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.button}
             onPress={handleReadTag}
           >
             <Text style={styles.buttonText}>Read Tag</Text>
           </TouchableOpacity>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.button}
             onPress={handleWriteTag}
           >
@@ -154,11 +165,11 @@ const OpenSpool = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#1a1a1a',
     justifyContent: 'center',
   },
   card: {
-    backgroundColor: 'white',
+    backgroundColor: '#2d2d2d',
     margin: 16,
     borderRadius: 12,
     padding: 20,
@@ -179,6 +190,8 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     textAlign: 'center',
     marginBottom: 20,
+    color: '#ffffff', // White text
+
   },
   circleContainer: {
     flexDirection: 'row',
@@ -191,12 +204,12 @@ const styles = StyleSheet.create({
   },
   navigationIcon: {
     fontSize: 24,
-    color: '#666',
+    color: '#999', // Lighter grey for navigation icons
   },
   circle: {
-    width: 80,
-    height: 80,
-    borderRadius: 40, // Exactly half of width/height
+    width: 120,
+    height: 120,
+    borderRadius: 60, // Exactly half of width/height
     backgroundColor: 'black',
     overflow: 'hidden', // This helps with some rendering artifacts[5]
     ...Platform.select({
@@ -208,7 +221,7 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  
+
   fieldsContainer: {
     gap: 16,
   },
@@ -217,18 +230,22 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
-    color: '#666',
+    color: '#999', // Lighter grey for labels
     marginBottom: 8,
   },
   dropdown: {
     height: 48,
-    borderColor: '#ccc',
+    borderColor: '#404040', // Darker border
     borderWidth: 1,
     borderRadius: 8,
     paddingHorizontal: 8,
+    backgroundColor: '#363636', // Dark dropdown background
+
   },
   dropdownContainer: {
     borderRadius: 8,
+    backgroundColor: '#363636', // Dark dropdown container
+
   },
   temperatureContainer: {
     flexDirection: 'row',
@@ -248,14 +265,16 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 48,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: '#404040', // Darker border
     borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#363636', // Dark button background
+
   },
   buttonText: {
     fontSize: 16,
-    color: '#333',
+    color: '#ffffff', // White text
   },
 
   colorItem: {
@@ -265,6 +284,8 @@ const styles = StyleSheet.create({
   },
   colorLabel: {
     fontSize: 16,
+    color: '#ffffff', // White text for color labels
+
   },
   colorSwatch: {
     width: 24,
@@ -272,7 +293,7 @@ const styles = StyleSheet.create({
     borderRadius: 12, // Exactly half of width/height for perfect circle[3]
     marginRight: 10,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: 'transparent',
   },
 });
 
