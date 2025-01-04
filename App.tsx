@@ -10,7 +10,7 @@ import {
 import { Dropdown } from 'react-native-element-dropdown';
 
 const OpenSpool = () => {
-  const [color, setColor] = useState('black');
+  const [color, setColor] = useState('pink');
   const [type, setType] = useState('pla');
   const [minTemp, setMinTemp] = useState('180');
   const [maxTemp, setMaxTemp] = useState('210');
@@ -180,7 +180,8 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: '600',
+    fontFamily: 'Orbitron-Regular',
+    // fontWeight: '600',
     textAlign: 'center',
     marginBottom: 20,
     color: '#ffffff', // White text
@@ -199,9 +200,9 @@ const styles = StyleSheet.create({
     color: '#999', // Lighter grey for navigation icons
   },
   circle: {
-    width: 120,
-    height: 120,
-    borderRadius: 60, // Exactly half of width/height
+    width: 140,
+    height: 140,
+    borderRadius: 70, // Exactly half of width/height
     alignContent: 'center',
     backgroundColor: 'black',
     overflow: 'hidden', // This helps with some rendering artifacts[5]

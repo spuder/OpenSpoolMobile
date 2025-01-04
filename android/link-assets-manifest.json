@@ -1,0 +1,29 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "assets/fonts/Orbitron-Black.ttf",
+      "sha1": "19c4f40df75add673845967c2991ea6801442b0b"
+    },
+    {
+      "path": "assets/fonts/Orbitron-Bold.ttf",
+      "sha1": "8347020cc2c8c9f4f9ea60b9ad666c662501474c"
+    },
+    {
+      "path": "assets/fonts/Orbitron-ExtraBold.ttf",
+      "sha1": "6ebbd3aa76f99524a9818abbedaf80f015616fd7"
+    },
+    {
+      "path": "assets/fonts/Orbitron-Medium.ttf",
+      "sha1": "e97b5fd285f05ec9aa3044a0111339ec1f3ecf62"
+    },
+    {
+      "path": "assets/fonts/Orbitron-Regular.ttf",
+      "sha1": "83051c0150895de073fd1d8e97d3687070e5dfa6"
+    },
+    {
+      "path": "assets/fonts/Orbitron-SemiBold.ttf",
+      "sha1": "1cb2e91b14b62bb9c72eda60db0600feb01ce93a"
+    }
+  ]
+}
