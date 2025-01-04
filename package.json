@@ -10,8 +10,12 @@
     "test": "jest"
   },
   "dependencies": {
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.469.0",
     "react": "18.3.1",
-    "react-native": "0.76.5"
+    "react-native": "0.76.5",
+    "react-native-element-dropdown": "^2.12.2"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
@@ -30,6 +34,7 @@
     "eslint": "^8.19.0",
     "jest": "^29.6.3",
     "prettier": "2.8.8",
+    "react-native-nfc-manager": "^3.16.1",
     "react-test-renderer": "18.3.1",
     "typescript": "5.0.4"
   },

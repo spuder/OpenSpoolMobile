@@ -1,198 +1,279 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
   View,
-  Pressable,
-  Modal,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Platform,
 } from 'react-native';
+import { Dropdown } from 'react-native-element-dropdown';
 
-const filamentTypes = ['PLA', 'PETG', 'ABS', 'TPU', 'Nylon'];
-const filamentBrands = ['Generic', 'Prusament', 'Overture', 'Hatchbox', 'eSUN'];
+const OpenSpool = () => {
+  const [color, setColor] = useState('black');
+  const [type, setType] = useState('pla');
+  const [minTemp, setMinTemp] = useState('180');
+  const [maxTemp, setMaxTemp] = useState('210');
 
-function Dropdown({ title, options, selected, onSelect }: {
-  title: string;
-  options: string[];
-  selected: string;
-  onSelect: (value: string) => void;
-}): React.JSX.Element {
-  const [modalVisible, setModalVisible] = useState(false);
-  const isDarkMode = useColorScheme() === 'dark';
+  const colors = [
+    { label: 'Black', value: 'black', hex: '#000000' },
+    { label: 'White', value: 'white', hex: '#FFFFFF' },
+    { label: 'Yellow', value: 'yellow', hex: '#FFEB3B' },
+    { label: 'Red', value: 'red', hex: '#F44336' },
+    { label: 'Blue', value: 'blue', hex: '#2196F3' },
+    { label: 'Green', value: 'green', hex: '#4CAF50' },
+  ];
 
-  return (
-    <View style={styles.dropdownContainer}>
-      <Text style={[styles.dropdownLabel, { color: isDarkMode ? '#fff' : '#000' }]}>{title}</Text>
-      <Pressable
-        style={[styles.dropdown, { backgroundColor: isDarkMode ? '#333' : '#eee' }]}
-        onPress={() => setModalVisible(true)}>
-        <Text style={[styles.selectedText, { color: isDarkMode ? '#fff' : '#000' }]}>
-          {selected}
-        </Text>
-      </Pressable>
+  const types = [
+    { label: 'PLA', value: 'pla' },
+    { label: 'PETG', value: 'petg' },
+    { label: 'ABS', value: 'abs' },
+    { label: 'TPU', value: 'tpu' },
+    { label: 'Nylon', value: 'nylon' },
+  ];
 
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}>
-        <View style={styles.modalOverlay}>
-          <View style={[styles.modalContent, { backgroundColor: isDarkMode ? '#222' : '#fff' }]}>
-            <Text style={[styles.modalTitle, { color: isDarkMode ? '#fff' : '#000' }]}>{title}</Text>
-            {options.map((option) => (
-              <Pressable
-                key={option}
-                style={styles.option}
-                onPress={() => {
-                  onSelect(option);
-                  setModalVisible(false);
-                }}>
-                <Text style={[styles.optionText, { color: isDarkMode ? '#fff' : '#000' }]}>
-                  {option}
-                </Text>
-              </Pressable>
-            ))}
-          </View>
-        </View>
-      </Modal>
-    </View>
-  );
-}
+  const temperatures = Array.from({ length: 11 }, (_, i) => ({
+    label: `${180 + i * 5}°C`,
+    value: (180 + i * 5).toString()
+  }));
 
-function App(): React.JSX.Element {
-  const [filamentType, setFilamentType] = useState(filamentTypes[0]);
-  const [filamentBrand, setFilamentBrand] = useState(filamentBrands[0]);
-  const [jsonOutput, setJsonOutput] = useState('');
-  const isDarkMode = useColorScheme() === 'dark';
-
-  useEffect(() => {
-    const output = {
-      protocol: "OpenSpool",
-      version: "1.0",
-      brand: filamentBrand,
-      type: filamentType
-    };
-    setJsonOutput(JSON.stringify(output, null, 2));
-  }, [filamentType, filamentBrand]);
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? '#000' : '#fff',
-    flex: 1,
+  const handleReadTag = () => {
+    console.log('Reading NFC tag...');
   };
 
+  const handleWriteTag = () => {
+    console.log('Writing to NFC tag...');
+  };
+
+  const renderColorItem = (item) => {
+    return (
+      <View style={styles.colorItem}>
+        <View style={[styles.colorSwatch, { backgroundColor: item.hex }]} />
+        <Text style={styles.colorLabel}>{item.label}</Text>
+      </View>
+    );
+  };
+  
+
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView contentInsetAdjustmentBehavior="automatic" style={styles.container}>
-        <View style={styles.header}>
-          <Text style={[styles.title, { color: isDarkMode ? '#fff' : '#000' }]}>
-            Filament Settings
-          </Text>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.card}>
+        <Text style={styles.title}>OpenSpool</Text>
+        
+        <View style={styles.circleContainer}>
+          <TouchableOpacity style={styles.navigationButton}>
+            <Text style={styles.navigationIcon}>◀</Text>
+          </TouchableOpacity>
+          <View style={[styles.circle, { backgroundColor: color }]} />
+          <TouchableOpacity style={styles.navigationButton}>
+            <Text style={styles.navigationIcon}>▶</Text>
+          </TouchableOpacity>
         </View>
-        <View style={styles.content}>
-          <Dropdown
-            title="Filament Type"
-            options={filamentTypes}
-            selected={filamentType}
-            onSelect={setFilamentType}
-          />
-          <Dropdown
-            title="Filament Brand"
-            options={filamentBrands}
-            selected={filamentBrand}
-            onSelect={setFilamentBrand}
-          />
-          <View style={[styles.jsonContainer, { backgroundColor: isDarkMode ? '#333' : '#f5f5f5' }]}>
-            <Text style={[styles.jsonTitle, { color: isDarkMode ? '#fff' : '#000' }]}>
-              Generated JSON
-            </Text>
-            <Text style={[styles.jsonOutput, { color: isDarkMode ? '#fff' : '#000' }]}>
-              {jsonOutput}
-            </Text>
+
+        <View style={styles.fieldsContainer}>
+          <View style={styles.fieldGroup}>
+            <Text style={styles.label}>Color</Text>
+            <Dropdown
+              style={styles.dropdown}
+              containerStyle={styles.dropdownContainer}
+              data={colors}
+              labelField="label"
+              valueField="value"
+              placeholder="Select color"
+              value={color}
+              onChange={item => setColor(item.value)}
+              renderItem={renderColorItem}
+            />
+          </View>
+
+          <View style={styles.fieldGroup}>
+            <Text style={styles.label}>Type</Text>
+            <Dropdown
+              style={styles.dropdown}
+              containerStyle={styles.dropdownContainer}
+              data={types}
+              labelField="label"
+              valueField="value"
+              placeholder="Select type"
+              value={type}
+              onChange={item => setType(item.value)}
+            />
+          </View>
+
+          <View style={styles.temperatureContainer}>
+            <View style={[styles.fieldGroup, styles.temperatureField]}>
+              <Text style={styles.label}>Min Temp</Text>
+              <Dropdown
+                style={styles.dropdown}
+                containerStyle={styles.dropdownContainer}
+                data={temperatures.slice(0, -3)}
+                labelField="label"
+                valueField="value"
+                placeholder="Min temp"
+                value={minTemp}
+                onChange={item => setMinTemp(item.value)}
+              />
+            </View>
+
+            <View style={[styles.fieldGroup, styles.temperatureField]}>
+              <Text style={styles.label}>Max Temp</Text>
+              <Dropdown
+                style={styles.dropdown}
+                containerStyle={styles.dropdownContainer}
+                data={temperatures.slice(3)}
+                labelField="label"
+                valueField="value"
+                placeholder="Max temp"
+                value={maxTemp}
+                onChange={item => setMaxTemp(item.value)}
+              />
+            </View>
           </View>
         </View>
-      </ScrollView>
+
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity 
+            style={styles.button}
+            onPress={handleReadTag}
+          >
+            <Text style={styles.buttonText}>Read Tag</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={styles.button}
+            onPress={handleWriteTag}
+          >
+            <Text style={styles.buttonText}>Write Tag</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     </SafeAreaView>
   );
-}
+};
+
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#f5f5f5',
+    justifyContent: 'center',
   },
-  header: {
+  card: {
+    backgroundColor: 'white',
+    margin: 16,
+    borderRadius: 12,
     padding: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
   },
   title: {
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: '600',
-  },
-  content: {
-    padding: 20,
-  },
-  dropdownContainer: {
+    textAlign: 'center',
     marginBottom: 20,
   },
-  dropdownLabel: {
-    fontSize: 16,
+  circleContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  navigationButton: {
+    padding: 12,
+  },
+  navigationIcon: {
+    fontSize: 24,
+    color: '#666',
+  },
+  circle: {
+    width: 80,
+    height: 80,
+    borderRadius: 40, // Exactly half of width/height
+    backgroundColor: 'black',
+    overflow: 'hidden', // This helps with some rendering artifacts[5]
+    ...Platform.select({
+      android: {
+        elevation: 0, // Remove elevation on Android to prevent jagged edges[10]
+      },
+      ios: {
+        shadowRadius: 0, // Remove shadow to prevent artifacts
+      },
+    }),
+  },
+  
+  fieldsContainer: {
+    gap: 16,
+  },
+  fieldGroup: {
+    marginBottom: 16,
+  },
+  label: {
+    fontSize: 14,
+    color: '#666',
     marginBottom: 8,
-    fontWeight: '500',
   },
   dropdown: {
-    padding: 15,
-    borderRadius: 8,
+    height: 48,
+    borderColor: '#ccc',
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderRadius: 8,
+    paddingHorizontal: 8,
   },
-  selectedText: {
-    fontSize: 16,
-  },
-  modalOverlay: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  modalContent: {
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    padding: 20,
-    maxHeight: '80%',
-  },
-  modalTitle: {
-    fontSize: 20,
-    fontWeight: '600',
-    marginBottom: 20,
-  },
-  option: {
-    padding: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
-  },
-  optionText: {
-    fontSize: 16,
-  },
-  jsonContainer: {
-    marginTop: 20,
-    padding: 15,
+  dropdownContainer: {
     borderRadius: 8,
   },
-  jsonTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    marginBottom: 10,
+  temperatureContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 16,
   },
-  jsonOutput: {
-    fontFamily: 'monospace',
-    fontSize: 14,
+  temperatureField: {
+    flex: 1,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 24,
+    gap: 16,
+  },
+  button: {
+    flex: 1,
+    height: 48,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonText: {
+    fontSize: 16,
+    color: '#333',
+  },
+
+  colorItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+  },
+  colorLabel: {
+    fontSize: 16,
+  },
+  colorSwatch: {
+    width: 24,
+    height: 24,
+    borderRadius: 12, // Exactly half of width/height for perfect circle[3]
+    marginRight: 10,
+    borderWidth: 1,
+    borderColor: '#ccc',
   },
 });
 
-export default App;
+export default OpenSpool;
