@@ -1,5 +1,10 @@
 # OpenSpoolMobile
 
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/openspool)
+
+
+### 🚧 Work in progress, will be released to Apple/Android stores in the near future 🚧
+
 Companion app for the OpenSpool Project
 
 - https://github.com/spuder/OpenSpool
