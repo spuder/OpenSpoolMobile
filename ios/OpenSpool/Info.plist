@@ -20,6 +20,24 @@
 	<string>6.0</string>
 	<key>CFBundleName</key>
 	<string>$(PRODUCT_NAME)</string>
+	<key>NFCReaderUsageDescription</key>
+	<string>We need to use NFC</string>
+	<key>com.apple.developer.nfc.readersession.iso7816.select-identifiers</key>
+	<array>
+	<string>D2760000850100</string>
+	<string>D2760000850101</string>
+	</array>
+	<key>com.apple.developer.nfc.readersession.felica.systemcodes</key>
+	<array>
+	<string>8005</string>
+	<string>8008</string>
+	<string>0003</string>
+	<string>fe00</string>
+	<string>90b7</string>
+	<string>927a</string>
+	<string>12FC</string>
+	<string>86a7</string>
+	</array>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>

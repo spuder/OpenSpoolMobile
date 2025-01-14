@@ -47,6 +47,7 @@
 		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = OpenSpool/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		19F6CBCC0A4E27FBF8BF4A61 /* libPods-OpenSpool-OpenSpoolTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OpenSpool-OpenSpoolTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B4392A12AC88292D35C810B /* Pods-OpenSpool.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenSpool.debug.xcconfig"; path = "Target Support Files/Pods-OpenSpool/Pods-OpenSpool.debug.xcconfig"; sourceTree = "<group>"; };
+		4EC4FD2B2D3422530080FAB2 /* OpenSpool.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = OpenSpool.entitlements; path = OpenSpool/OpenSpool.entitlements; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-OpenSpool.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenSpool.release.xcconfig"; path = "Target Support Files/Pods-OpenSpool/Pods-OpenSpool.release.xcconfig"; sourceTree = "<group>"; };
 		591C4798DBAB41DEA723F844 /* Orbitron-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Orbitron-Black.ttf"; path = "../assets/fonts/Orbitron-Black.ttf"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-OpenSpool-OpenSpoolTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenSpool-OpenSpoolTests.debug.xcconfig"; path = "Target Support Files/Pods-OpenSpool-OpenSpoolTests/Pods-OpenSpool-OpenSpoolTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -100,6 +101,7 @@
 		13B07FAE1A68108700A75B9A /* OpenSpool */ = {
 			isa = PBXGroup;
 			children = (
+				4EC4FD2B2D3422530080FAB2 /* OpenSpool.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -502,6 +504,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = OpenSpool/OpenSpool.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = MDV7B53NY3;
 				ENABLE_BITCODE = NO;
@@ -531,6 +534,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = OpenSpool/OpenSpool.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = MDV7B53NY3;
 				INFOPLIST_FILE = OpenSpool/Info.plist;
@@ -586,7 +590,7 @@
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -665,7 +669,7 @@
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
