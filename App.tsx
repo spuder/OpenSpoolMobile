@@ -6,8 +6,10 @@ import {
   StyleSheet,
   TouchableOpacity,
   Platform,
+  Alert,
 } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
+import NfcManager, { NfcTech, Ndef } from 'react-native-nfc-manager';
 
 const OpenSpool = () => {
   const [color, setColor] = useState('pink');
@@ -16,13 +18,13 @@ const OpenSpool = () => {
   const [maxTemp, setMaxTemp] = useState('210');
 
   const colors = [
-    { label: 'Pink', value: 'pink', hex: '#ea338d' },
-    { label: 'Black', value: 'black', hex: '#000000' },
-    { label: 'White', value: 'white', hex: '#FFFFFF' },
-    { label: 'Yellow', value: 'yellow', hex: '#FFEB3B' },
-    { label: 'Red', value: 'red', hex: '#F44336' },
-    { label: 'Blue', value: 'blue', hex: '#2196F3' },
-    { label: 'Green', value: 'green', hex: '#4CAF50' },
+    { label: 'Pink', value: 'pink', hex: 'ea338d' },
+    { label: 'Black', value: 'black', hex: '000000' },
+    { label: 'White', value: 'white', hex: 'ffffff' },
+    { label: 'Yellow', value: 'yellow', hex: 'FFEB3B' },
+    { label: 'Red', value: 'red', hex: 'f95d73' },
+    { label: 'Blue', value: 'blue', hex: '2196F3' },
+    { label: 'Green', value: 'green', hex: '4CAF50' },
   ];
 
   const types = [
@@ -33,26 +35,101 @@ const OpenSpool = () => {
     { label: 'Nylon', value: 'nylon' },
   ];
 
-  const temperatures = Array.from({ length: 11 }, (_, i) => ({
+  const temperatures = Array.from({ length: 20 }, (_, i) => ({
     label: `${180 + i * 5}°C`,
-    value: (180 + i * 5).toString()
+    value: (180 + i * 5).toString(),
   }));
 
-  const handleReadTag = () => {
-    console.log('Reading NFC tag...');
-  };
-
-  const handleWriteTag = () => {
-    console.log('Writing to NFC tag...');
-  };
-
-  const renderColorItem = (item) => {
+  const renderColorItem = (item: any) => {
     return (
       <View style={styles.colorItem}>
-        <View style={[styles.colorSwatch, { backgroundColor: item.hex }]} />
+        <View style={[styles.colorSwatch, { backgroundColor: `#${item.hex}` }]} />
         <Text style={styles.colorLabel}>{item.label}</Text>
       </View>
     );
+  };
+
+  const verifyAndSetMinTemp = (temp: string) => {
+    if (Number(temp) >= Number(maxTemp)) {
+      Alert.alert('Min temperature must be less than max temperature');
+    }
+      setMinTemp(temp);
+  };
+
+  const verifyAndSetMaxTemp = (temp: string) => {
+    if (Number(temp) <= Number(minTemp)) {
+      Alert.alert('Max temperature must be greater than min temperature');
+    }
+    setMaxTemp(temp);
+  };
+
+  async function readNdef() {
+    try {
+      // register for the NFC tag with NDEF in it
+      await NfcManager.requestTechnology(NfcTech.Ndef);
+
+      // Extract NDEF message (if present)
+      const tag = await NfcManager.getTag();
+
+      // Extract NDEF message (if present)
+      if (tag?.ndefMessage) {
+        const rawValue = tag.ndefMessage.map(record =>
+          String.fromCharCode(...record.payload)
+        );
+
+        let jsonValue = JSON.parse(rawValue.toString());
+        var nfcColor = colors.find(c => c.hex.toLowerCase() === jsonValue.color_hex.toLowerCase());
+        var nfcType = types.find(t => t.value.toLowerCase() === jsonValue.type.toLowerCase());
+
+        setColor(nfcColor?.value ?? 'blue');
+        setType(nfcType?.value ?? 'pla');
+        setMinTemp(jsonValue.min_temp.toString());
+        setMaxTemp(jsonValue.max_temp.toString());
+      } else {
+        Alert.alert('No NDEF message found on the tag.');
+      }
+    } catch (ex) {
+      console.warn('Oops!', ex);
+    } finally {
+      // stop the nfc scanning
+      NfcManager.cancelTechnologyRequest();
+    }
+  }
+
+  const writeNdef = async () => {
+
+    if (Number(minTemp) >= Number(maxTemp)) {
+      Alert.alert('Min temperature must be less than max temperature');
+      return;
+    }
+
+    try {
+      await NfcManager.requestTechnology(NfcTech.Ndef);
+
+      const jsonData = {
+        version: '1.0',
+        protocol: 'openspool',
+        color_hex: colors.find(c => c.value === color)?.hex,
+        type: type,
+        min_temp: Number(minTemp),
+        max_temp: Number(maxTemp),
+        brand: 'Generic',
+      };
+      const jsonStr = JSON.stringify(jsonData);
+      const ndefRecords = Ndef.record(Ndef.TNF_MIME_MEDIA, 'application/json', '1', jsonStr);
+
+      //requires an array, but makes it a single once it's passed in
+      const bytes = await Ndef.encodeMessage([ndefRecords]);
+
+      if (bytes) {
+        await NfcManager.ndefHandler
+          .writeNdefMessage(bytes);
+      }
+    } catch (error) {
+      console.error('Error writing JSON:', error);
+    } finally {
+      NfcManager.cancelTechnologyRequest();
+    }
   };
 
 
@@ -63,7 +140,7 @@ const OpenSpool = () => {
 
         <View style={styles.circleContainer}>
           <View style={[styles.circle, {
-            backgroundColor: colors.find(c => c.value === color)?.hex || color
+            backgroundColor: `#${colors.find(c => c.value === color)?.hex}` || color,
           }]} />
         </View>
 
@@ -80,8 +157,8 @@ const OpenSpool = () => {
               value={color}
               onChange={item => setColor(item.value)}
               renderItem={renderColorItem}
-              placeholderStyle={{ color: '#999' }}
-              selectedTextStyle={{ color: '#ffffff' }}
+              placeholderStyle={styles.placeHolder}
+              selectedTextStyle={styles.selected}
             />
           </View>
 
@@ -96,8 +173,8 @@ const OpenSpool = () => {
               placeholder="Select type"
               value={type}
               onChange={item => setType(item.value)}
-              placeholderStyle={{ color: '#999' }}
-              selectedTextStyle={{ color: '#ffffff' }}
+              placeholderStyle={styles.placeHolder}
+              selectedTextStyle={styles.selected}
             />
           </View>
 
@@ -112,9 +189,9 @@ const OpenSpool = () => {
                 valueField="value"
                 placeholder="Min temp"
                 value={minTemp}
-                onChange={item => setMinTemp(item.value)}
-                placeholderStyle={{ color: '#999' }}
-                selectedTextStyle={{ color: '#ffffff' }}
+                onChange={item => verifyAndSetMinTemp(item.value)}
+                placeholderStyle={styles.placeHolder}
+                selectedTextStyle={styles.selected}
               />
             </View>
 
@@ -128,9 +205,9 @@ const OpenSpool = () => {
                 valueField="value"
                 placeholder="Max temp"
                 value={maxTemp}
-                onChange={item => setMaxTemp(item.value)}
-                placeholderStyle={{ color: '#999' }}
-                selectedTextStyle={{ color: '#ffffff' }}
+                onChange={item => verifyAndSetMaxTemp(item.value)}
+                placeholderStyle={styles.placeHolder}
+                selectedTextStyle={styles.selected}
               />
             </View>
           </View>
@@ -139,13 +216,13 @@ const OpenSpool = () => {
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={styles.button}
-            onPress={handleReadTag}
+            onPress={readNdef}
           >
             <Text style={styles.buttonText}>Read Tag</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.button}
-            onPress={handleWriteTag}
+            onPress={writeNdef}
           >
             <Text style={styles.buttonText}>Write Tag</Text>
           </TouchableOpacity>
@@ -200,9 +277,9 @@ const styles = StyleSheet.create({
     color: '#999', // Lighter grey for navigation icons
   },
   circle: {
-    width: 140,
-    height: 140,
-    borderRadius: 70, // Exactly half of width/height
+    width: 180,
+    height: 180,
+    borderRadius: 90, // Exactly half of width/height
     alignContent: 'center',
     backgroundColor: 'black',
     overflow: 'hidden', // This helps with some rendering artifacts[5]
@@ -278,7 +355,6 @@ const styles = StyleSheet.create({
   },
   colorLabel: {
     fontSize: 16,
-    color: '#ffffff', // White text for color labels
 
   },
   colorSwatch: {
@@ -288,6 +364,12 @@ const styles = StyleSheet.create({
     marginRight: 10,
     borderWidth: 1,
     borderColor: 'transparent',
+  },
+  placeHolder: {
+    color: '#999',
+  },
+  selected: {
+    color: '#ffffff',
   },
 });
 
