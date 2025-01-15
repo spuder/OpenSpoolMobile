@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import {
   SafeAreaView,
+  ScrollView,
   View,
   Text,
   StyleSheet,
@@ -98,7 +99,7 @@ const OpenSpool = () => {
         Alert.alert('No NDEF message found on the tag.');
       }
     } catch (ex) {
-      console.warn('Oops!', ex);
+      console.warn('NFC read failed - could be user or system failure', ex);
     } finally {
       if (Platform.OS === 'android') {
         setReadTagModalOpen(false);
@@ -161,7 +162,7 @@ const OpenSpool = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.card}>
+      <ScrollView style={styles.card} overScrollMode="always">
         <Text style={styles.title}>OpenSpool</Text>
 
         <View style={styles.circleContainer}>
@@ -253,7 +254,7 @@ const OpenSpool = () => {
             <Text style={styles.buttonText}>Write Tag</Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </ScrollView>
 
       {(Platform.OS === 'android' ?
         <Modal
@@ -278,14 +279,8 @@ const OpenSpool = () => {
                 <Text style={[styles.androidDurationText, styles.waitingText]}>Hold Tag To Phone For 1 Second</Text>
                 <ActivityIndicator size={'large'} color={'#ea338d'} />
               </View>
-              <View>
-                <TouchableOpacity onPress={closeModalAndCancelRead}>
-                  <Text style={styles.cancelButton}>Cancel</Text>
-                </TouchableOpacity>
-              </View>
             </View>
           </View>
-
         </Modal>
         : null
       )}
