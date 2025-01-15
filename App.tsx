@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Platform,
   Alert,
+  Image
 } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import NfcManager, { NfcTech, Ndef } from 'react-native-nfc-manager';
@@ -139,9 +140,19 @@ const OpenSpool = () => {
         <Text style={styles.title}>OpenSpool</Text>
 
         <View style={styles.circleContainer}>
-          <View style={[styles.circle, {
-            backgroundColor: `#${colors.find(c => c.value === color)?.hex}` || color,
-          }]} />
+          <View style={styles.circleWrapper}>
+            <View 
+              style={[
+                styles.circle, 
+                { backgroundColor: `#${colors.find(c => c.value === color)?.hex}` || color }
+              ]} 
+            />
+            <Image
+              source={require('./assets/openspool-transparent.png')}
+              style={styles.overlayImage}
+              resizeMode="cover"
+            />
+          </View>
         </View>
 
         <View style={styles.fieldsContainer}>
@@ -268,6 +279,26 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 24,
+  },
+  circleWrapper: {
+    position: 'relative',
+    width: 180,
+    height: 180,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  // circle: {
+  //   position: 'absolute',
+  //   width: 180,
+  //   height: 180,
+  //   borderRadius: 90,
+  //   backgroundColor: 'black',
+  // },
+  overlayImage: {
+    position: 'absolute',
+    width: 250,
+    height: 260,
+    opacity: 1.0, // Adjust this value to control the overlay intensity
   },
   navigationButton: {
     padding: 12,
