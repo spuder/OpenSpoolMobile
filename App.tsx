@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Platform,
   Alert,
+  Image,
   Modal,
   ActivityIndicator,
 } from 'react-native';
@@ -166,9 +167,19 @@ const OpenSpool = () => {
         <Text style={styles.title}>OpenSpool</Text>
 
         <View style={styles.circleContainer}>
-          <View style={[styles.circle, {
-            backgroundColor: `#${colors.find(c => c.value === color)?.hex}` || color,
-          }]} />
+          <View style={styles.circleWrapper}>
+            <View 
+              style={[
+                styles.circle, 
+                { backgroundColor: `#${colors.find(c => c.value === color)?.hex}` || color }
+              ]} 
+            />
+            <Image
+              source={require('./assets/openspool-transparent.png')}
+              style={styles.overlayImage}
+              resizeMode="cover"
+            />
+          </View>
         </View>
 
         <View style={styles.fieldsContainer}>
@@ -322,6 +333,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 24,
   },
+  circleWrapper: {
+    position: 'relative',
+    width: 180,
+    height: 180,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  overlayImage: {
+    position: 'absolute',
+    width: 250,
+    height: 260,
+    opacity: 1.0, // Adjust this value to control the overlay intensity
+  },
   navigationButton: {
     padding: 12,
   },
@@ -347,7 +371,7 @@ const styles = StyleSheet.create({
   },
 
   fieldsContainer: {
-    gap: 16,
+    gap: 9,
   },
   fieldGroup: {
     marginBottom: 16,
@@ -355,10 +379,10 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     color: '#999', // Lighter grey for labels
-    marginBottom: 8,
+    marginBottom: 4,
   },
   dropdown: {
-    height: 48,
+    height: 40,
     borderColor: '#404040', // Darker border
     borderWidth: 1,
     borderRadius: 8,
