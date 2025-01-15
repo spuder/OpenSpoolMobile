@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import {
   SafeAreaView,
+  ScrollView,
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   Platform,
   Alert,
+  Modal,
+  ActivityIndicator,
 } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import NfcManager, { NfcTech, Ndef } from 'react-native-nfc-manager';
@@ -16,6 +19,8 @@ const OpenSpool = () => {
   const [type, setType] = useState('pla');
   const [minTemp, setMinTemp] = useState('180');
   const [maxTemp, setMaxTemp] = useState('210');
+  const [modalTitle, setModalTitle] = useState('Read Tag');
+  const [readTagModalOpen, setReadTagModalOpen] = useState(false);
 
   const colors = [
     { label: 'Pink', value: 'pink', hex: 'ea338d' },
@@ -53,7 +58,7 @@ const OpenSpool = () => {
     if (Number(temp) >= Number(maxTemp)) {
       Alert.alert('Min temperature must be less than max temperature');
     }
-      setMinTemp(temp);
+    setMinTemp(temp);
   };
 
   const verifyAndSetMaxTemp = (temp: string) => {
@@ -65,6 +70,11 @@ const OpenSpool = () => {
 
   async function readNdef() {
     try {
+      if (Platform.OS === 'android') {
+        setModalTitle('Read Tag');
+        setReadTagModalOpen(true);
+      }
+
       // register for the NFC tag with NDEF in it
       await NfcManager.requestTechnology(NfcTech.Ndef);
 
@@ -89,21 +99,29 @@ const OpenSpool = () => {
         Alert.alert('No NDEF message found on the tag.');
       }
     } catch (ex) {
-      console.warn('Oops!', ex);
+      console.warn('NFC read failed - could be user or system failure', ex);
     } finally {
+      if (Platform.OS === 'android') {
+        setReadTagModalOpen(false);
+      }
+
       // stop the nfc scanning
       NfcManager.cancelTechnologyRequest();
     }
   }
 
   const writeNdef = async () => {
-
     if (Number(minTemp) >= Number(maxTemp)) {
       Alert.alert('Min temperature must be less than max temperature');
       return;
     }
 
     try {
+      if (Platform.OS === 'android') {
+        setModalTitle('Write To Tag');
+        setReadTagModalOpen(true);
+      }
+
       await NfcManager.requestTechnology(NfcTech.Ndef);
 
       const jsonData = {
@@ -128,14 +146,23 @@ const OpenSpool = () => {
     } catch (error) {
       console.error('Error writing JSON:', error);
     } finally {
+      if (Platform.OS === 'android') {
+        setReadTagModalOpen(false);
+      }
+
       NfcManager.cancelTechnologyRequest();
     }
+  };
+
+  const closeModalAndCancelRead = () => {
+    setReadTagModalOpen(false);
+    NfcManager.cancelTechnologyRequest();
   };
 
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.card}>
+      <ScrollView style={styles.card} overScrollMode="always">
         <Text style={styles.title}>OpenSpool</Text>
 
         <View style={styles.circleContainer}>
@@ -227,7 +254,36 @@ const OpenSpool = () => {
             <Text style={styles.buttonText}>Write Tag</Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </ScrollView>
+
+      {(Platform.OS === 'android' ?
+        <Modal
+          visible={readTagModalOpen}
+          transparent={false}
+          animationType={'slide'}
+          onRequestClose={closeModalAndCancelRead}
+          presentationStyle={'overFullScreen'}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+              <View style={styles.modalHeader}>
+                <Text style={styles.modalTitle}>
+                  {modalTitle}
+                </Text>
+                <TouchableOpacity onPress={closeModalAndCancelRead}>
+                  <Text style={styles.closeButton}>✕</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.androidModalContainer}>
+                <Text style={styles.androidModalText}>Waiting for tag...</Text>
+                <Text style={[styles.androidDurationText, styles.waitingText]}>Hold Tag To Phone For 1 Second</Text>
+                <ActivityIndicator size={'large'} color={'#ea338d'} />
+              </View>
+            </View>
+          </View>
+        </Modal>
+        : null
+      )}
     </SafeAreaView>
   );
 };
@@ -249,9 +305,6 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
-      },
-      android: {
-        elevation: 5,
       },
     }),
   },
@@ -370,6 +423,80 @@ const styles = StyleSheet.create({
   },
   selected: {
     color: '#ffffff',
+  },
+  androidModalContainer: {
+    alignContent: 'center',
+  },
+  androidModalText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+  androidDurationText: {
+    fontSize: 12,
+  },
+  waitingText: {
+    marginVertical: 15,
+    color: '#fff',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    width: '90%',
+    backgroundColor: '#2d2d2d',
+    borderRadius: 10,
+    padding: 20,
+    elevation: 5,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+  closeButton: {
+    fontSize: 20,
+    color: '#fff',
+  },
+  modalSubtitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: '#555',
+  },
+  modalBody: {
+    marginBottom: 20,
+  },
+  modalItem: {
+    fontSize: 14,
+    color: '#555',
+    marginBottom: 8,
+  },
+  modalFooter: {
+    alignSelf: 'flex-end',
+    marginTop: 10,
+    backgroundColor: '#007BFF',
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+  },
+  modalFooterText: {
+    color: '#fff',
+    fontSize: 16,
+  },
+  cancelButton: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    color: '#333',
   },
 });
 
