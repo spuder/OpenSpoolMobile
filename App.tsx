@@ -340,13 +340,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  // circle: {
-  //   position: 'absolute',
-  //   width: 180,
-  //   height: 180,
-  //   borderRadius: 90,
-  //   backgroundColor: 'black',
-  // },
   overlayImage: {
     position: 'absolute',
     width: 250,
@@ -378,7 +371,7 @@ const styles = StyleSheet.create({
   },
 
   fieldsContainer: {
-    gap: 16,
+    gap: 9,
   },
   fieldGroup: {
     marginBottom: 16,
@@ -386,10 +379,10 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     color: '#999', // Lighter grey for labels
-    marginBottom: 8,
+    marginBottom: 4,
   },
   dropdown: {
-    height: 48,
+    height: 40,
     borderColor: '#404040', // Darker border
     borderWidth: 1,
     borderRadius: 8,
