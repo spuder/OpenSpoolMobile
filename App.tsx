@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -11,11 +11,14 @@ import {
   Image,
   Modal,
   ActivityIndicator,
+  Animated,
 } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import NfcManager, { NfcTech, Ndef } from 'react-native-nfc-manager';
 
 const OpenSpool = () => {
+  const [isLoading, setIsLoading] = useState(true);
+  const rotateAnim = useRef(new Animated.Value(0)).current;
   const [color, setColor] = useState('pink');
   const [type, setType] = useState('pla');
   const [minTemp, setMinTemp] = useState('180');
@@ -23,6 +26,23 @@ const OpenSpool = () => {
   const [modalTitle, setModalTitle] = useState('Read Tag');
   const [readTagModalOpen, setReadTagModalOpen] = useState(false);
 
+  // Splash screen animation
+  useEffect(() => {
+    Animated.timing(rotateAnim, {
+      toValue: 1,
+      duration: 800,
+      useNativeDriver: true,
+    }).start(() => {
+      setIsLoading(false);
+    });
+  }, []);
+
+  const spin = rotateAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '270deg'],
+  });
+
+  // All your existing data arrays
   const colors = [
     { label: 'Pink', value: 'pink', hex: 'ea338d' },
     { label: 'Black', value: 'black', hex: '000000' },
@@ -76,13 +96,9 @@ const OpenSpool = () => {
         setReadTagModalOpen(true);
       }
 
-      // register for the NFC tag with NDEF in it
       await NfcManager.requestTechnology(NfcTech.Ndef);
-
-      // Extract NDEF message (if present)
       const tag = await NfcManager.getTag();
 
-      // Extract NDEF message (if present)
       if (tag?.ndefMessage) {
         const rawValue = tag.ndefMessage.map(record =>
           String.fromCharCode(...record.payload)
@@ -105,8 +121,6 @@ const OpenSpool = () => {
       if (Platform.OS === 'android') {
         setReadTagModalOpen(false);
       }
-
-      // stop the nfc scanning
       NfcManager.cancelTechnologyRequest();
     }
   }
@@ -137,12 +151,10 @@ const OpenSpool = () => {
       const jsonStr = JSON.stringify(jsonData);
       const ndefRecords = Ndef.record(Ndef.TNF_MIME_MEDIA, 'application/json', '1', jsonStr);
 
-      //requires an array, but makes it a single once it's passed in
       const bytes = await Ndef.encodeMessage([ndefRecords]);
 
       if (bytes) {
-        await NfcManager.ndefHandler
-          .writeNdefMessage(bytes);
+        await NfcManager.ndefHandler.writeNdefMessage(bytes);
       }
     } catch (error) {
       console.error('Error writing JSON:', error);
@@ -150,7 +162,6 @@ const OpenSpool = () => {
       if (Platform.OS === 'android') {
         setReadTagModalOpen(false);
       }
-
       NfcManager.cancelTechnologyRequest();
     }
   };
@@ -160,7 +171,27 @@ const OpenSpool = () => {
     NfcManager.cancelTechnologyRequest();
   };
 
+  // Render splash screen while loading
+  if (isLoading) {
+    return (
+      <View style={styles.splashContainer}>
+        <View style={styles.logoContainer}>
+          <Animated.Image
+            source={require('./assets/openspool.png')}
+            style={[
+              styles.splashLogo,
+              {
+                transform: [{ rotate: spin }],
+              },
+            ]}
+            resizeMode="contain"
+          />
+        </View>
+      </View>
+    );
+  }
 
+  // Main app render
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.card} overScrollMode="always">
@@ -267,7 +298,7 @@ const OpenSpool = () => {
         </View>
       </ScrollView>
 
-      {(Platform.OS === 'android' ?
+      {Platform.OS === 'android' && (
         <Modal
           visible={readTagModalOpen}
           transparent={false}
@@ -287,19 +318,38 @@ const OpenSpool = () => {
               </View>
               <View style={styles.androidModalContainer}>
                 <Text style={styles.androidModalText}>Waiting for tag...</Text>
-                <Text style={[styles.androidDurationText, styles.waitingText]}>Hold Tag To Phone For 1 Second</Text>
+                <Text style={[styles.androidDurationText, styles.waitingText]}>
+                  Hold Tag To Phone For 1 Second
+                </Text>
                 <ActivityIndicator size={'large'} color={'#ea338d'} />
               </View>
             </View>
           </View>
         </Modal>
-        : null
       )}
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  // Add new splash screen styles
+  splashContainer: {
+    flex: 1,
+    backgroundColor: '#1a1a1a',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  logoContainer: {
+    width: 250,
+    height: 250,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  splashLogo: {
+    width: '100%',
+    height: '100%',
+  },
+  // Your existing styles
   container: {
     flex: 1,
     backgroundColor: '#1a1a1a',
@@ -322,11 +372,9 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontFamily: 'Orbitron-Regular',
-    // fontWeight: '600',
     textAlign: 'center',
     marginBottom: 20,
-    color: '#ffffff', // White text
-
+    color: '#ffffff',
   },
   circleContainer: {
     justifyContent: 'space-between',
@@ -342,34 +390,33 @@ const styles = StyleSheet.create({
   },
   overlayImage: {
     position: 'absolute',
-    width: 250,
-    height: 260,
-    opacity: 1.0, // Adjust this value to control the overlay intensity
+    width: 200,
+    height: 200,
+    opacity: 1.0,
   },
   navigationButton: {
     padding: 12,
   },
   navigationIcon: {
     fontSize: 24,
-    color: '#999', // Lighter grey for navigation icons
+    color: '#999',
   },
   circle: {
     width: 180,
     height: 180,
-    borderRadius: 90, // Exactly half of width/height
+    borderRadius: 90,
     alignContent: 'center',
     backgroundColor: 'black',
-    overflow: 'hidden', // This helps with some rendering artifacts[5]
+    overflow: 'hidden',
     ...Platform.select({
       android: {
-        elevation: 0, // Remove elevation on Android to prevent jagged edges[10]
+        elevation: 0,
       },
       ios: {
-        shadowRadius: 0, // Remove shadow to prevent artifacts
+        shadowRadius: 0,
       },
     }),
   },
-
   fieldsContainer: {
     gap: 9,
   },
@@ -378,22 +425,20 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
-    color: '#999', // Lighter grey for labels
+    color: '#999',
     marginBottom: 4,
   },
   dropdown: {
     height: 40,
-    borderColor: '#404040', // Darker border
+    borderColor: '#404040',
     borderWidth: 1,
     borderRadius: 8,
     paddingHorizontal: 8,
-    backgroundColor: '#363636', // Dark dropdown background
-
+    backgroundColor: '#363636',
   },
   dropdownContainer: {
     borderRadius: 8,
-    backgroundColor: '#363636', // Dark dropdown container
-
+    backgroundColor: '#363636',
   },
   temperatureContainer: {
     flexDirection: 'row',
@@ -413,12 +458,11 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 48,
     borderWidth: 1,
-    borderColor: '#404040', // Darker border
+    borderColor: '#404040',
     borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#363636', // Dark button background
-
+    backgroundColor: '#363636',
   },
   buttonText: {
     fontSize: 16,
