@@ -26,11 +26,10 @@ const OpenSpool = () => {
   const [modalTitle, setModalTitle] = useState('Read Tag');
   const [readTagModalOpen, setReadTagModalOpen] = useState(false);
 
-  // Splash screen animation
   useEffect(() => {
     Animated.timing(rotateAnim, {
       toValue: 1,
-      duration: 800,
+      duration: 720,
       useNativeDriver: true,
     }).start(() => {
       setIsLoading(false);
@@ -39,12 +38,11 @@ const OpenSpool = () => {
 
   const spin = rotateAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: ['0deg', '270deg'],
+    outputRange: ['0deg', '360deg'],
   });
 
-  // All your existing data arrays
   const colors = [
-    { label: 'Pink', value: 'pink', hex: 'ea338d' },
+    { label: 'Pink', value: 'pink', hex: 'ff0081' },
     { label: 'Black', value: 'black', hex: '000000' },
     { label: 'White', value: 'white', hex: 'ffffff' },
     { label: 'Yellow', value: 'yellow', hex: 'FFEB3B' },
@@ -171,27 +169,6 @@ const OpenSpool = () => {
     NfcManager.cancelTechnologyRequest();
   };
 
-  // Render splash screen while loading
-  if (isLoading) {
-    return (
-      <View style={styles.splashContainer}>
-        <View style={styles.logoContainer}>
-          <Animated.Image
-            source={require('./assets/openspool.png')}
-            style={[
-              styles.splashLogo,
-              {
-                transform: [{ rotate: spin }],
-              },
-            ]}
-            resizeMode="contain"
-          />
-        </View>
-      </View>
-    );
-  }
-
-  // Main app render
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.card} overScrollMode="always">
@@ -200,16 +177,21 @@ const OpenSpool = () => {
         <View style={styles.circleContainer}>
           <View style={styles.circleWrapper}>
             <View 
-              style={[
-                styles.circle, 
-                { backgroundColor: `#${colors.find(c => c.value === color)?.hex}` || color }
-              ]} 
-            />
-            <Image
-              source={require('./assets/openspool-transparent.png')}
-              style={styles.overlayImage}
-              resizeMode="cover"
-            />
+                style={[
+                  styles.circle, 
+                  { backgroundColor: isLoading ? '#ff0081' : `#${colors.find(c => c.value === color)?.hex}` || color }
+                ]} 
+              />
+              <Animated.Image
+                source={require('./assets/openspool-transparent.png')}
+                style={[
+                  styles.overlayImage,
+                  {
+                    transform: [{ rotate: isLoading ? spin : '0deg' }],
+                  },
+                ]}
+                resizeMode="cover"
+              />
           </View>
         </View>
 
@@ -332,7 +314,6 @@ const OpenSpool = () => {
 };
 
 const styles = StyleSheet.create({
-  // Add new splash screen styles
   splashContainer: {
     flex: 1,
     backgroundColor: '#1a1a1a',
@@ -349,7 +330,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
-  // Your existing styles
   container: {
     flex: 1,
     backgroundColor: '#1a1a1a',
@@ -390,8 +370,8 @@ const styles = StyleSheet.create({
   },
   overlayImage: {
     position: 'absolute',
-    width: 200,
-    height: 200,
+    width: 180,
+    height: 180,
     opacity: 1.0,
   },
   navigationButton: {
@@ -466,9 +446,8 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 16,
-    color: '#ffffff', // White text
+    color: '#ffffff',
   },
-
   colorItem: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -476,7 +455,6 @@ const styles = StyleSheet.create({
   },
   colorLabel: {
     fontSize: 16,
-
   },
   colorSwatch: {
     width: 24,
