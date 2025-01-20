@@ -8,7 +8,6 @@ import {
   TouchableOpacity,
   Platform,
   Alert,
-  Image,
   Modal,
   ActivityIndicator,
   Animated,
@@ -34,7 +33,7 @@ const OpenSpool = () => {
     }).start(() => {
       setIsLoading(false);
     });
-  }, []);
+  }, [rotateAnim]);
 
   const spin = rotateAnim.interpolate({
     inputRange: [0, 1],
@@ -155,6 +154,9 @@ const OpenSpool = () => {
         await NfcManager.ndefHandler.writeNdefMessage(bytes);
       }
     } catch (error) {
+      if(Platform.OS === 'android'){
+        Alert.alert('Failed to write to tag. If corrupted, try again and keep tag in place for 1 full second.');
+      }
       console.error('Error writing JSON:', error);
     } finally {
       if (Platform.OS === 'android') {
@@ -176,11 +178,11 @@ const OpenSpool = () => {
 
         <View style={styles.circleContainer}>
           <View style={styles.circleWrapper}>
-            <View 
+            <View
                 style={[
-                  styles.circle, 
-                  { backgroundColor: isLoading ? '#ff0081' : `#${colors.find(c => c.value === color)?.hex}` || color }
-                ]} 
+                  styles.circle,
+                  { backgroundColor: isLoading ? '#ff0081' : `#${colors.find(c => c.value === color)?.hex}` || color },
+                ]}
               />
               <Animated.Image
                 source={require('./assets/openspool-transparent.png')}
