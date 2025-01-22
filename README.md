@@ -7,7 +7,7 @@
 
 
 IOS: https://forms.gle/qgC3xsRWVQJDKWLg7  
-Android: https://forms.gle/VGv4KYDpByGdvEyH9  
+Android: https://play.google.com/apps/internaltest/4700574822182030131
 
 
 Companion app for the OpenSpool Project https://github.com/spuder/OpenSpool
