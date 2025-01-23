@@ -1,4 +1,4 @@
-package com.openspool
+package io.openspool
 
 import android.app.Application
 import com.facebook.react.PackageList

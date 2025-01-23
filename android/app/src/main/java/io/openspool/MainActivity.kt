@@ -1,4 +1,4 @@
-package com.openspool
+package io.openspool
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
