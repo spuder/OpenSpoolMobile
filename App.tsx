@@ -256,6 +256,10 @@ const OpenSpool = () => {
               onChange={item => setType(item.value)}
               placeholderStyle={styles.placeHolder}
               selectedTextStyle={styles.selected}
+              renderItem={(item) => (
+                <Text style={[styles.colorLabel, { padding: 10 }]}>{item.label}</Text>
+              )}
+              activeColor="#3d3d3d" // Add highlight color
             />
           </View>
 
@@ -272,7 +276,11 @@ const OpenSpool = () => {
                 value={minTemp}
                 onChange={item => verifyAndSetMinTemp(item.value)}
                 placeholderStyle={styles.placeHolder}
-                selectedTextStyle={styles.selected}
+                selectedTextStyle={[styles.selected, { color: '#ffffff' }]}
+                renderItem={(item) => (
+                  <Text style={[styles.colorLabel, { padding: 10 }]}>{item.label}</Text>
+                )}
+                activeColor="#3d3d3d" // Add highlight color
               />
             </View>
 
@@ -288,7 +296,11 @@ const OpenSpool = () => {
                 value={maxTemp}
                 onChange={item => verifyAndSetMaxTemp(item.value)}
                 placeholderStyle={styles.placeHolder}
-                selectedTextStyle={styles.selected}
+                selectedTextStyle={[styles.selected, { color: '#ffffff' }]}
+                renderItem={(item) => (
+                  <Text style={[styles.colorLabel, { padding: 10 }]}>{item.label}</Text>
+                )}
+                activeColor="#3d3d3d" // Add highlight color
               />
             </View>
           </View>
