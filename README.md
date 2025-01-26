@@ -30,4 +30,11 @@ Reads/Writes NFC tags for 3d printer filament.
 ![](./images/Simulator%20Screenshot%20-%20iPhone%2016%20Pro%20Max%20-%202025-01-14%20at%2022.13.31.png)
 
 
+# Releasing
+
+```
+Change version number in android/app/build.gradle
+make android
+```
+
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/openspool)
