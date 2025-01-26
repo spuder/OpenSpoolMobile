@@ -509,7 +509,7 @@
 				CODE_SIGN_ENTITLEMENTS = OpenSpool/OpenSpool.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = MDV7B53NY3;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = OpenSpool/Info.plist;
@@ -548,7 +548,7 @@
 				CODE_SIGN_ENTITLEMENTS = OpenSpool/OpenSpool.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = MDV7B53NY3;
 				INFOPLIST_FILE = OpenSpool/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
