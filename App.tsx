@@ -127,7 +127,7 @@ const OpenSpool = () => {
         setMinTemp(jsonValue.min_temp.toString());
         setMaxTemp(jsonValue.max_temp.toString());
       } else {
-        Alert.alert('No NDEF message found on the tag.');
+        Alert.alert('Empty tag detected.');
       }
     } catch (ex) {
       console.warn('NFC read failed - could be user or system failure', ex);
