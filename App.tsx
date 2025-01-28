@@ -75,10 +75,19 @@ const OpenSpool = () => {
     { label: 'Nylon', value: 'nylon' },
   ];
 
-  const temperatures = Array.from({ length: 20 }, (_, i) => ({
+  const temperatures = Array.from({ length: 21 }, (_, i) => ({
     label: `${180 + i * 5}°C`,
     value: (180 + i * 5).toString(),
   }));
+
+  const filamentDefaults = {
+    pla: { minTemp: 190, maxTemp: 240 },
+    petg: { minTemp: 220, maxTemp: 270 },
+    abs: { minTemp: 240, maxTemp: 280 },
+    gpu: { minTemp: 200, maxTemp: 250 },
+    tpu: { minTemp: 200, maxTemp: 250 },
+    nylon: { minTemp: 190, maxTemp: 240 },
+  };
 
   const renderColorItem = (item: any) => {
     return (
@@ -110,6 +119,15 @@ const OpenSpool = () => {
       Alert.alert('Max temperature must be greater than min temperature');
     }
     setMaxTemp(temp);
+  };
+
+  const setTypeAndDefaults = (type: string) => {
+    setType(type);
+    const defaults = filamentDefaults[type];
+    if (defaults) {
+        setMinTemp(String(defaults.minTemp));
+        setMaxTemp(String(defaults.maxTemp));
+    }
   };
 
   async function readNdef() {
@@ -262,7 +280,7 @@ const OpenSpool = () => {
               valueField="value"
               placeholder="Select type"
               value={type}
-              onChange={item => setType(item.value)}
+              onChange={item => setTypeAndDefaults(item.value)}
               placeholderStyle={styles.placeHolder}
               selectedTextStyle={styles.selected}
               renderItem={(item) => (
