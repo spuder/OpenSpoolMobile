@@ -90,9 +90,18 @@ const OpenSpool = () => {
   };
 
   const verifyAndSetMinTemp = (temp: string) => {
+      // If the new minTemp is equal or greater than the maxTemp, adjust maxTemp
     if (Number(temp) >= Number(maxTemp)) {
-      Alert.alert('Min temperature must be less than max temperature');
+        const tempPlusStep = Number(temp) + 5;
+        const highestTempValue = Number(temperatures[temperatures.length - 1].value);
+
+        // Ensure maxTemp is always greater than minTemp
+        const newMaxTemp = Math.min(tempPlusStep, highestTempValue);
+
+        setMaxTemp(String(newMaxTemp));
     }
+
+      // Set the new minTemp
     setMinTemp(temp);
   };
 
@@ -269,7 +278,7 @@ const OpenSpool = () => {
               <Dropdown
                 style={styles.dropdown}
                 containerStyle={styles.dropdownContainer}
-                data={temperatures.slice(0, -3)}
+                data={temperatures.slice(0, -1)}
                 labelField="label"
                 valueField="value"
                 placeholder="Min temp"
