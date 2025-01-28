@@ -147,11 +147,6 @@ const OpenSpool = () => {
   };
 
   async function readNdef() {
-  const isNfcReady = await checkNfcSupportedAndEnabled();
-  if (!isNfcReady) {
-    return;
-  }
-
     try {
       if (Platform.OS === 'android') {
         setModalTitle('Read Tag');
@@ -188,11 +183,6 @@ const OpenSpool = () => {
   }
 
   const writeNdef = async () => {
-    const isNfcReady = await checkNfcSupportedAndEnabled();
-    if (!isNfcReady) {
-      return;
-    }
-
     if (Number(minTemp) >= Number(maxTemp)) {
       Alert.alert('Min temperature must be less than max temperature');
       return;
@@ -362,13 +352,23 @@ const OpenSpool = () => {
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={styles.button}
-            onPress={readNdef}
+            onPress={async () => {
+              const isNfcReady = await checkNfcSupportedAndEnabled();
+              if (isNfcReady) {
+                readNdef();
+              }
+            }}
           >
             <Text style={styles.buttonText}>Read Tag</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.button}
-            onPress={writeNdef}
+            onPress={async () => {
+              const isNfcReady = await checkNfcSupportedAndEnabled();
+              if (isNfcReady) {
+                writeNdef();
+              }
+            }}
           >
             <Text style={styles.buttonText}>Write Tag</Text>
           </TouchableOpacity>
