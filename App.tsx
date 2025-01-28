@@ -130,7 +130,28 @@ const OpenSpool = () => {
     }
   };
 
+  const checkNfcSupportedAndEnabled = async () => {
+    const isNfcSupported = await NfcManager.isSupported();
+    if (!isNfcSupported) {
+      Alert.alert('NFC is not supported on this device.');
+      return false;
+    }
+
+    const isNfcEnabled = await NfcManager.isEnabled();
+    if (!isNfcEnabled) {
+      Alert.alert('NFC is disabled. Please enable it in your device settings.');
+      return false;
+    }
+
+    return true;
+  };
+
   async function readNdef() {
+  const isNfcReady = await checkNfcSupportedAndEnabled();
+  if (!isNfcReady) {
+    return;
+  }
+
     try {
       if (Platform.OS === 'android') {
         setModalTitle('Read Tag');
@@ -167,6 +188,11 @@ const OpenSpool = () => {
   }
 
   const writeNdef = async () => {
+    const isNfcReady = await checkNfcSupportedAndEnabled();
+    if (!isNfcReady) {
+      return;
+    }
+
     if (Number(minTemp) >= Number(maxTemp)) {
       Alert.alert('Min temperature must be less than max temperature');
       return;
