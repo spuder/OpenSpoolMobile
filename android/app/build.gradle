@@ -113,6 +113,25 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
+
+    tasks.preBuild.doLast {
+        def iconSizes = ["mdpi", "hdpi", "xhdpi", "xxhdpi", "xxxhdpi"]
+        def sourceDir = file("${projectDir.getParentFile().getParent()}/AppIcons/android/")
+        def resBaseDir = file("${projectDir}/src/main/res/")
+        iconSizes.each { size ->
+            def sourceSubDir = new File(sourceDir, "mipmap-${size}")
+            def destDir = new File(resBaseDir, "mipmap-${size}")
+            if (!destDir.exists()) {
+                destDir.mkdirs()
+            }
+            if (sourceSubDir.exists()) {
+                copy {
+                    from sourceSubDir
+                    into destDir
+                }
+            }
+        }
+    }
 }
 
 dependencies {
