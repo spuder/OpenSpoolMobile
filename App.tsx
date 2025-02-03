@@ -215,7 +215,7 @@ const OpenSpool = () => {
       }
     } catch (error) {
       if(Platform.OS === 'android'){
-        Alert.alert('Failed to write to tag. If corrupted, try again and keep tag in place for 1 full second.');
+        Alert.alert('Failed to write to tag.', 'If corrupted, try again and keep tag in place for 1 full second.');
       }
       console.error('Error writing JSON:', error);
     } finally {
