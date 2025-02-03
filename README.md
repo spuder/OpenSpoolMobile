@@ -10,6 +10,8 @@
 
 IOS: https://forms.gle/qgC3xsRWVQJDKWLg7  
 Android: https://forms.gle/VGv4KYDpByGdvEyH9  
+Android Play Store: https://play.google.com/apps/testing/io.openspool
+
 
 
 Companion app for the OpenSpool Project https://github.com/spuder/OpenSpool
