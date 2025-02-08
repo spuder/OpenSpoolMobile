@@ -68,7 +68,7 @@ const OpenSpool = () => {
     { label: 'Matte Ivory White', value: 'matte_ivory_white', hex: 'FFFFFF' },
     { label: 'Matte Latte Brown', value: 'matte_latte_brown', hex: 'D3B7A7' },
     { label: 'Matte Lilac Purple', value: 'matte_lilac_purple', hex: 'AE96D4' },
-    { label: 'Matte Ash Gray', value: 'matte_ash_grey', hex: '9B9EA0' },
+    { label: 'Matte Ash Grey', value: 'matte_ash_grey', hex: '9B9EA0' },
     { label: 'Matte Mandarin Orange', value: 'matte_mandarin_orange', hex: 'F99963' },
     { label: 'Matte Sakura Pink', value: 'matte_sakura_pink', hex: 'E8AFCF' },
     { label: 'Matte Ice Blue', value: 'matte_ice_blue', hex: 'A3D8E1' },
