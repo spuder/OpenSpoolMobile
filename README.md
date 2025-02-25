@@ -3,19 +3,16 @@
 [![Discord](https://img.shields.io/discord/1298381115706576907?logo=discord)](https://discord.gg/4EaXHu9CEj) [![Reddit](https://img.shields.io/badge/reddit-join-orange?logo=reddit)](https://www.reddit.com/r/openspool)  
 
 
-## Beta Testers Needed
-
-#### Signup Here: 
-
-
-IOS: https://forms.gle/qgC3xsRWVQJDKWLg7  
-Android: https://forms.gle/VGv4KYDpByGdvEyH9  
-Android Play Store: https://play.google.com/apps/testing/io.openspool
-
-
-
 Companion app for the OpenSpool Project https://github.com/spuder/OpenSpool
 
+---
+
+## Android: https://play.google.com/store/apps/details?id=io.openspool&utm_source=na_Med
+
+## iOS: https://apps.apple.com/us/app/openspool/id6740551901
+
+
+---
 
 ## Usage
 
