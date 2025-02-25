@@ -19,7 +19,7 @@ dep-ios:
 
 # Build Android release
 android:
-# Note you need to update versionCode 
+# Note you need to update versionCode in build.gradle
 	npx react-native build-android --mode=release
 	open ./android/app/build/outputs/bundle/release
 
