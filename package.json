@@ -10,18 +10,21 @@
     "test": "jest"
   },
   "dependencies": {
+    "@react-navigation/native": "^7.1.24",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.469.0",
     "react": "18.3.1",
     "react-native": "0.76.5",
-    "react-native-element-dropdown": "^2.12.2"
+    "react-native-element-dropdown": "^2.12.2",
+    "react-native-safe-area-context": "^5.6.2",
+    "react-native-screens": "^3.31.1"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
     "@babel/preset-env": "^7.25.3",
     "@babel/runtime": "^7.25.0",
-    "@react-native-community/cli": "15.0.1",
+    "@react-native-community/cli": "latest",
     "@react-native-community/cli-platform-android": "15.0.1",
     "@react-native-community/cli-platform-ios": "15.0.1",
     "@react-native/babel-preset": "0.76.5",
