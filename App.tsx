@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {
-  SafeAreaView,
   ScrollView,
   View,
   Text,
@@ -12,6 +11,7 @@ import {
   ActivityIndicator,
   Animated,
 } from 'react-native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Dropdown } from 'react-native-element-dropdown';
 import NfcManager, { NfcTech, Ndef } from 'react-native-nfc-manager';
 
@@ -643,4 +643,11 @@ const styles = StyleSheet.create({
   },
 });
 
-export default OpenSpool;
+
+const App = () => (
+  <SafeAreaProvider>
+    <OpenSpool />
+  </SafeAreaProvider>
+);
+
+export default App;
