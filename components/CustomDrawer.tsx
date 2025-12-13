@@ -9,28 +9,24 @@ function CustomDrawerContent(props: any) {
     const { showModal: setTagModalOpen, hideModal: setTagModalClosed } = useTagModal();
 
     async function writeAppTag() {
-        let bytes: number[] | null = null;
-        if (Platform.OS === 'ios') {
-            bytes = Ndef.encodeMessage([
-                Ndef.uriRecord('bambulab://'),
-            ]);
-        }
-        else if (Platform.OS === 'android') {
+        if (Platform.OS === 'android') {
             setTagModalOpen();
             props.navigation.closeDrawer();
 
-            const ndefRecords = Ndef.record(Ndef.TNF_MIME_MEDIA, 'text', '1', 'bbl.intl.bambulab.com');
-
-            bytes = Ndef.encodeMessage([
-                ndefRecords,
-            ]);
         }
+
+        let records = [
+            Ndef.uriRecord('bambulab://'),
+            Ndef.androidApplicationRecord('bbl.intl.bambulab.com'),
+        ];
+
+        let bytes = Ndef.encodeMessage(records);
 
         if (bytes !== null) {
             await writeNdef(bytes);
         }
 
-        if(Platform.OS === 'android'){
+        if (Platform.OS === 'android') {
             setTagModalClosed();
         }
     }

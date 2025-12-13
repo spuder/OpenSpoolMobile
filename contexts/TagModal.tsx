@@ -7,7 +7,7 @@ const TagModalContext = createContext({
     isVisible: false,
     showModal: () => {},
     hideModal: () => {},
-    setTitle: (title: string) => {},
+    setTitle: (_title: string) => {},
 });
 
 export function TagModalProvider({ children }: { children: React.ReactNode }) {
