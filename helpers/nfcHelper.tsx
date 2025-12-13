@@ -20,6 +20,7 @@ const writeNdef = async (bytes: number[]) => {
 
 async function readNdef(): Promise<any | null> {
     try {
+        console.log('Starting NFC Read');
         await NfcManager.requestTechnology(NfcTech.Ndef);
         const tag = await NfcManager.getTag();
 
@@ -35,6 +36,9 @@ async function readNdef(): Promise<any | null> {
         }
     } catch (ex) {
         console.warn('NFC read failed - could be user or system failure', ex);
+    }
+    finally{
+        NfcManager.cancelTechnologyRequest();
     }
     return null;
 }
