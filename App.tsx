@@ -13,7 +13,48 @@ import {
   Animated,
 } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
-import NfcManager, { NfcTech, Ndef } from 'react-native-nfc-manager';
+import NfcManager, { NfcTech, Ndef, NfcError, NdefRecord } from 'react-native-nfc-manager';
+
+// Thrown when a tag was read but doesn't hold usable OpenSpool data
+class TagFormatError extends Error {}
+
+type OpenSpoolTag = {
+  color_hex: string;
+  type: string;
+  min_temp: number;
+  max_temp: number;
+};
+
+// Finds the OpenSpool JSON record on a tag and validates it before any state is touched
+const parseOpenSpoolTag = (records: NdefRecord[]): OpenSpoolTag => {
+  const record = records.find(
+    r => r.tnf === Ndef.TNF_MIME_MEDIA && Ndef.util.bytesToString(r.type) === 'application/json',
+  );
+  if (!record) {
+    throw new TagFormatError('This tag does not contain OpenSpool data.');
+  }
+
+  let data: any;
+  try {
+    data = JSON.parse(Ndef.util.bytesToString(record.payload));
+  } catch {
+    throw new TagFormatError('The data on this tag is not valid JSON.');
+  }
+
+  const minTemp = Number(data?.min_temp);
+  const maxTemp = Number(data?.max_temp);
+  if (
+    data?.protocol !== 'openspool' ||
+    typeof data.color_hex !== 'string' ||
+    typeof data.type !== 'string' ||
+    !Number.isFinite(minTemp) ||
+    !Number.isFinite(maxTemp)
+  ) {
+    throw new TagFormatError('This is not a valid OpenSpool tag.');
+  }
+
+  return { color_hex: data.color_hex, type: data.type, min_temp: minTemp, max_temp: maxTemp };
+};
 
 const OpenSpool = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -24,6 +65,14 @@ const OpenSpool = () => {
   const [maxTemp, setMaxTemp] = useState('210');
   const [modalTitle, setModalTitle] = useState('Read Tag');
   const [readTagModalOpen, setReadTagModalOpen] = useState(false);
+  // Ref guards against double taps before state updates; state drives the disabled buttons
+  const nfcBusyRef = useRef(false);
+  const [nfcBusy, setNfcBusyState] = useState(false);
+
+  const setNfcBusy = (busy: boolean) => {
+    nfcBusyRef.current = busy;
+    setNfcBusyState(busy);
+  };
 
   useEffect(() => {
     Animated.timing(rotateAnim, {
@@ -196,6 +245,11 @@ const OpenSpool = () => {
   };
 
   async function readNdef() {
+    if (nfcBusyRef.current) {
+      return;
+    }
+    setNfcBusy(true);
+
     try {
       if (Platform.OS === 'android') {
         setModalTitle('Read Tag');
@@ -205,30 +259,51 @@ const OpenSpool = () => {
       await NfcManager.requestTechnology(NfcTech.Ndef);
       const tag = await NfcManager.getTag();
 
-      if (tag?.ndefMessage) {
-        const rawValue = tag.ndefMessage.map(record =>
-          String.fromCharCode(...record.payload)
-        );
-
-        let jsonValue = JSON.parse(rawValue.toString());
-        var nfcColor = colors.find(c => c.hex.toLowerCase() === jsonValue.color_hex.toLowerCase());
-        const tagType = typeAliases[jsonValue.type.toLowerCase()] ?? jsonValue.type;
-        var nfcType = types.find(t => t.value.toLowerCase() === tagType.toLowerCase());
-
-        setColor(nfcColor?.value ?? 'blue');
-        setType(nfcType?.value ?? 'PLA');
-        setMinTemp(jsonValue.min_temp.toString());
-        setMaxTemp(jsonValue.max_temp.toString());
-      } else {
+      if (!tag?.ndefMessage?.length) {
         Alert.alert('Empty tag detected.');
+        return;
+      }
+
+      const tagData = parseOpenSpoolTag(tag.ndefMessage);
+      const nfcColor = colors.find(c => c.hex.toLowerCase() === tagData.color_hex.toLowerCase());
+      const tagType = typeAliases[tagData.type.toLowerCase()] ?? tagData.type;
+      const nfcType = types.find(t => t.value.toLowerCase() === tagType.toLowerCase());
+
+      setColor(nfcColor?.value ?? 'blue');
+      setType(nfcType?.value ?? 'PLA');
+      setMinTemp(String(tagData.min_temp));
+      setMaxTemp(String(tagData.max_temp));
+
+      const unknown = [];
+      if (!nfcColor) {
+        unknown.push(`color #${tagData.color_hex}`);
+      }
+      if (!nfcType) {
+        unknown.push(`type "${tagData.type}"`);
+      }
+      if (unknown.length) {
+        Alert.alert(
+          'Unrecognized values',
+          `This tag's ${unknown.join(' and ')} isn't in the app's list, so a default is shown. Writing the tag will replace it.`,
+        );
       }
     } catch (ex) {
-      console.warn('NFC read failed - could be user or system failure', ex);
+      if (ex instanceof NfcError.UserCancel) {
+        return;
+      }
+      console.warn('NFC read failed', ex);
+      if (ex instanceof TagFormatError) {
+        Alert.alert('Failed to read tag.', ex.message);
+      } else if (Platform.OS === 'android') {
+        Alert.alert('Failed to read tag.', 'Keep the tag in place for 1 full second and try again.');
+      }
     } finally {
       if (Platform.OS === 'android') {
         setReadTagModalOpen(false);
       }
-      NfcManager.cancelTechnologyRequest();
+      // Awaited so a new request can't start before Android unregisters the tag listener
+      await NfcManager.cancelTechnologyRequest();
+      setNfcBusy(false);
     }
   }
 
@@ -237,6 +312,10 @@ const OpenSpool = () => {
       Alert.alert('Min temperature must be less than max temperature');
       return;
     }
+    if (nfcBusyRef.current) {
+      return;
+    }
+    setNfcBusy(true);
 
     try {
       if (Platform.OS === 'android') {
@@ -262,9 +341,13 @@ const OpenSpool = () => {
 
       if (bytes) {
         await NfcManager.ndefHandler.writeNdefMessage(bytes);
+        Alert.alert('Tag written.');
       }
     } catch (error) {
-      if(Platform.OS === 'android'){
+      if (error instanceof NfcError.UserCancel) {
+        return;
+      }
+      if (Platform.OS === 'android') {
         Alert.alert('Failed to write to tag.', 'If corrupted, try again and keep tag in place for 1 full second.');
       }
       console.error('Error writing JSON:', error);
@@ -272,7 +355,9 @@ const OpenSpool = () => {
       if (Platform.OS === 'android') {
         setReadTagModalOpen(false);
       }
-      NfcManager.cancelTechnologyRequest();
+      // Awaited so a new request can't start before Android unregisters the tag listener
+      await NfcManager.cancelTechnologyRequest();
+      setNfcBusy(false);
     }
   };
 
@@ -401,7 +486,8 @@ const OpenSpool = () => {
 
         <View style={styles.buttonContainer}>
           <TouchableOpacity
-            style={styles.button}
+            style={[styles.button, nfcBusy && styles.buttonDisabled]}
+            disabled={nfcBusy}
             onPress={async () => {
               const isNfcReady = await checkNfcSupportedAndEnabled();
               if (isNfcReady) {
@@ -412,7 +498,8 @@ const OpenSpool = () => {
             <Text style={styles.buttonText}>Read Tag</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={styles.button}
+            style={[styles.button, nfcBusy && styles.buttonDisabled]}
+            disabled={nfcBusy}
             onPress={async () => {
               const isNfcReady = await checkNfcSupportedAndEnabled();
               if (isNfcReady) {
@@ -588,6 +675,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#363636',
+  },
+  buttonDisabled: {
+    opacity: 0.5,
   },
   buttonText: {
     fontSize: 16,

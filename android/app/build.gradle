@@ -115,6 +115,14 @@ android {
     }
 }
 
+// Without the signing properties a release build silently comes out unsigned; fail instead
+gradle.taskGraph.whenReady { graph ->
+    def buildsRelease = graph.allTasks.any { it.project == project && it.name ==~ /(assemble|bundle|package)Release/ }
+    if (buildsRelease && !project.hasProperty('OPENSPOOL_UPLOAD_STORE_FILE')) {
+        throw new GradleException("Release builds need the OPENSPOOL_UPLOAD_* signing properties (see README 'Releasing').")
+    }
+}
+
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
