@@ -44,7 +44,12 @@ Local release builds (`make android`) read the signing key from `OPENSPOOL_UPLOA
 
 ### iOS
 
-Bump `CURRENT_PROJECT_VERSION` and `MARKETING_VERSION` in `ios/OpenSpool.xcodeproj/project.pbxproj`, then push a `v*` tag from `main` to upload to TestFlight.
+Push a stable version tag from `main`; the iOS version comes from the tag, the same way as Android (`v1.4.0` → version `1.4.0`, build `10400`), and the build is uploaded to App Store Connect / TestFlight. Submit it for review in App Store Connect.
+
+- `v1.4.0` (stable): uploads to TestFlight.
+- `v1.4.0-beta1` (prerelease): skipped on iOS (iOS versions can't carry a suffix).
+
+The version in `ios/OpenSpool.xcodeproj/project.pbxproj` is only used for local builds.
 
 Both platforms' publish workflows use protected environments (`android-release`, `app-store`), so each tag run waits for approval in the Actions tab.
 

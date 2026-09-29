@@ -1,6 +1,6 @@
 # TODO (iOS)
 
-iOS work lives on branch `ios/release-prep` (worktree `../OpenSpoolMobile-ios`). Android work is on `android/sideload-apk` (worktree `../OpenSpoolMobile-android`).
+iOS work is done in the `../OpenSpoolMobile-ios` worktree on short-lived `ios/*` branches; Android work happens in its own worktree/branches.
 
 ## Done
 
@@ -21,10 +21,10 @@ iOS work lives on branch `ios/release-prep` (worktree `../OpenSpoolMobile-ios`).
 - [x] App Store Connect API key "OpenSpool CI" (Admin, Key ID `T568F9M4T3`) created; `.p8` + Key ID + Issuer ID saved in 1Password (Private vault, item "OpenSpool CI").
 - [x] Secrets `APP_STORE_CONNECT_API_KEY_ID`, `APP_STORE_CONNECT_API_ISSUER_ID`, `APP_STORE_CONNECT_API_KEY_CONTENT` stored in the protected `app-store` GitHub environment (required reviewer: spuder; deployments only from `v*` tags). The workflow also refuses tags whose commit isn't on `main`, and never runs outside `spuder/OpenSpoolMobile`.
 - [x] iOS version/build number derived from the release tag (`v1.4.0` → `1.4.0 (10400)`), matching Android; prerelease tags skipped on iOS.
-- [x] `ios/release-prep` merged (#44).
-- [ ] After the Android stack (#42) lands on `main`: push a stable tag (e.g. `v1.4.0`) on `main` and approve the `app-store` deployment. Watch the first run — automatic signing with the API key is untested.
-- [ ] README "Releasing": add an iOS subsection (tag-based, stable tags only) once the Android agent's README conflict resolution lands.
-- [ ] Test NFC read/write on a physical iPhone with a Release build before submitting.
+- [x] iOS release prep (#44) and tag-based versions (#45) merged; Android stack (#42/#43) merged.
+- [ ] Push a stable tag (e.g. `v1.4.0`) on `main` and approve the `app-store` deployment. Watch the first run — automatic signing with the API key is untested.
+- [x] README "Releasing" iOS subsection describes tag-based versions.
+- [ ] Test NFC read/write on a physical iPhone with a Release build before submitting (NFC code changed in #42).
 
 ## Handed to the Android branch
 
