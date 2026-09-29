@@ -2,6 +2,14 @@
 
 .PHONY: run-ios dep-ios android clean-android run-android
 
+# Gradle 8.10 can't run on JDK 23+; default to Android Studio's bundled JDK if JAVA_HOME isn't set
+ANDROID_STUDIO_JDK := /Applications/Android Studio.app/Contents/jbr/Contents/Home
+ifeq ($(JAVA_HOME),)
+  ifneq ($(shell test -d "$(ANDROID_STUDIO_JDK)" && echo yes),)
+    export JAVA_HOME := $(ANDROID_STUDIO_JDK)
+  endif
+endif
+
 # Run iOS app
 run-ios:
 	npx react-native run-ios
@@ -24,7 +32,7 @@ android:
 	open ./android/app/build/outputs/bundle/release
 
 clean-android:
-	cd android && ./gradlew clean && cd ..
+	cd android && ./gradlew clean
 
 # Default target
 .DEFAULT_GOAL := run-ios
