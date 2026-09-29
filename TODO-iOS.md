@@ -17,9 +17,11 @@ iOS work lives on branch `ios/release-prep` (worktree `../OpenSpoolMobile-ios`).
 
 ## Before republishing
 
-- [ ] Create an App Store Connect API key (Users and Access → Integrations → Team Keys, **Admin** role so it can create the distribution certificate) and add repo secrets: `APP_STORE_CONNECT_API_KEY_ID`, `APP_STORE_CONNECT_API_ISSUER_ID`, `APP_STORE_CONNECT_API_KEY_CONTENT` (contents of the `.p8`).
+- [x] Membership renewed; Free Apps Agreement active through 2027-09-28. (Paid Apps Agreement not signed — only needed for paid apps/IAP.)
+- [x] App Store Connect API key "OpenSpool CI" (Admin, Key ID `T568F9M4T3`) created; `.p8` + Key ID + Issuer ID saved in 1Password (Private vault, item "OpenSpool CI").
+- [x] Secrets `APP_STORE_CONNECT_API_KEY_ID`, `APP_STORE_CONNECT_API_ISSUER_ID`, `APP_STORE_CONNECT_API_KEY_CONTENT` stored in the protected `app-store` GitHub environment (required reviewer: spuder; deployments only from `v*` tags). The workflow also refuses tags whose commit isn't on `main`, and never runs outside `spuder/OpenSpoolMobile`.
 - [ ] Decide on the build number: `CURRENT_PROJECT_VERSION` is `8`. Fine if 1.3 is a new version in App Store Connect; bump if a `1.3 (8)` was ever uploaded.
-- [ ] Membership renewal (order W1477052229) still processing as of 2026-09-28; API key creation is blocked until it completes.
+- [ ] Merge `ios/release-prep` into `main`, then push a `v*` tag on `main` and approve the `app-store` deployment.
 - [ ] Test NFC read/write on a physical iPhone with a Release build before submitting.
 
 ## Handed to the Android branch
