@@ -42,4 +42,10 @@ Push a version tag; the Android version comes from the tag (`v1.4.0` → version
 
 Local release builds (`make android`) read the signing key from `OPENSPOOL_UPLOAD_*` in `~/.gradle/gradle.properties`, and fall back to the version in `android/app/build.gradle` unless you pass `-POPENSPOOL_VERSION=1.4.0`.
 
+### iOS
+
+Bump `CURRENT_PROJECT_VERSION` and `MARKETING_VERSION` in `ios/OpenSpool.xcodeproj/project.pbxproj`, then push a `v*` tag from `main` to upload to TestFlight.
+
+Both platforms' publish workflows use protected environments (`android-release`, `app-store`), so each tag run waits for approval in the Actions tab.
+
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/openspool)
