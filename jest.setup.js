@@ -9,11 +9,14 @@ jest.mock('react-native-nfc-manager', () => ({
     getTag: jest.fn(() => Promise.resolve(null)),
     cancelTechnologyRequest: jest.fn(() => Promise.resolve()),
     ndefHandler: {writeNdefMessage: jest.fn(() => Promise.resolve())},
+    ndefFormatableHandlerAndroid: {formatNdef: jest.fn(() => Promise.resolve())},
   },
-  NfcTech: {Ndef: 'Ndef'},
+  NfcTech: {Ndef: 'Ndef', NdefFormatable: 'NdefFormatable'},
+  NfcError: {UserCancel: class UserCancel extends Error {}},
   Ndef: {
     TNF_MIME_MEDIA: 0x02,
     record: jest.fn(),
     encodeMessage: jest.fn(() => []),
+    util: {bytesToString: jest.fn(bytes => String(bytes))},
   },
 }));

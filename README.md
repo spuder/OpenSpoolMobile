@@ -33,11 +33,19 @@ Reads/Writes NFC tags for 3d printer filament.
 
 # Releasing
 
-1. Bump the version on both platforms (keep them in sync):
-   - Android: `versionCode` and `versionName` in `android/app/build.gradle`
-   - iOS: `CURRENT_PROJECT_VERSION` (= `versionCode`) and `MARKETING_VERSION` (= `versionName`) in `ios/OpenSpool.xcodeproj/project.pbxproj`
-2. Build locally with `make android` (release AAB), or push a `v*` tag to run the GitHub Actions publish workflows for the Play Store and TestFlight.
+### Android
 
-Local Android release builds read the signing key from `OPENSPOOL_UPLOAD_*` properties in `~/.gradle/gradle.properties`.
+Push a version tag; the Android version comes from the tag (`v1.4.0` → versionName `1.4.0`, versionCode `10400`):
+
+- `v1.4.0` (stable): builds a sideload APK attached to the GitHub Release, and uploads an AAB to the Play Store internal track (promote it to production in Play Console).
+- `v1.4.0-beta1` (prerelease): sideload APK only, published as a GitHub prerelease.
+
+Local release builds (`make android`) read the signing key from `OPENSPOOL_UPLOAD_*` in `~/.gradle/gradle.properties`, and fall back to the version in `android/app/build.gradle` unless you pass `-POPENSPOOL_VERSION=1.4.0`.
+
+### iOS
+
+Bump `CURRENT_PROJECT_VERSION` and `MARKETING_VERSION` in `ios/OpenSpool.xcodeproj/project.pbxproj`, then push a `v*` tag from `main` to upload to TestFlight.
+
+Both platforms' publish workflows use protected environments (`android-release`, `app-store`), so each tag run waits for approval in the Actions tab.
 
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/openspool)
