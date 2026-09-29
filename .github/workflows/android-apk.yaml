@@ -1,0 +1,76 @@
+name: OpenSpool Android APK (sideload)
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Decode keystore
+        env:
+          ANDROID_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE }}
+        run: echo "$ANDROID_KEYSTORE" | base64 --decode > "$RUNNER_TEMP/openspool.keystore"
+
+      - name: Build signed release APK
+        env:
+          STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          cd android
+          ./gradlew assembleRelease \
+            -PreactNativeArchitectures=armeabi-v7a,arm64-v8a \
+            -POPENSPOOL_UPLOAD_STORE_FILE="$RUNNER_TEMP/openspool.keystore" \
+            -POPENSPOOL_UPLOAD_STORE_PASSWORD="$STORE_PASSWORD" \
+            -POPENSPOOL_UPLOAD_KEY_ALIAS="$KEY_ALIAS" \
+            -POPENSPOOL_UPLOAD_KEY_PASSWORD="$KEY_PASSWORD"
+
+      - name: Name APK
+        id: apk
+        run: |
+          if [[ "$GITHUB_REF_TYPE" == "tag" ]]; then VERSION="$GITHUB_REF_NAME"; else VERSION="${GITHUB_SHA::7}"; fi
+          NAME="OpenSpool-${VERSION}.apk"
+          mkdir -p dist
+          cp android/app/build/outputs/apk/release/app-release.apk "dist/$NAME"
+          (cd dist && sha256sum "$NAME" > "$NAME.sha256")
+          echo "name=$NAME" >> "$GITHUB_OUTPUT"
+
+      - name: Upload workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.apk.outputs.name }}
+          path: dist/*
+
+      - name: Attach to GitHub Release
+        if: github.ref_type == 'tag'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1 \
+            || gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --generate-notes
+          gh release upload "$GITHUB_REF_NAME" dist/* --clobber
