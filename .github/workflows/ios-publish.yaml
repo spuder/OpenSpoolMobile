@@ -1,0 +1,76 @@
+name: OpenSpool iOS Publisher
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: macos-latest
+    env:
+      LANG: en_US.UTF-8
+      API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+      API_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Setup Ruby (CocoaPods from Gemfile)
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+
+      - name: Install Dependencies
+        run: |
+          npm ci
+          cd ios && bundle exec pod install
+
+      # Automatic signing: xcodebuild uses the App Store Connect API key to create/download
+      # the distribution certificate and provisioning profile (key needs the Admin role).
+      - name: Write App Store Connect API key
+        env:
+          API_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_API_KEY_CONTENT }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/private_keys"
+          echo "$API_KEY_CONTENT" > "$RUNNER_TEMP/private_keys/AuthKey_$API_KEY_ID.p8"
+          echo "API_KEY_PATH=$RUNNER_TEMP/private_keys/AuthKey_$API_KEY_ID.p8" >> "$GITHUB_ENV"
+
+      - name: Archive
+        run: |
+          cd ios
+          xcodebuild -workspace OpenSpool.xcworkspace \
+            -scheme OpenSpool \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -archivePath "$RUNNER_TEMP/OpenSpool.xcarchive" \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$API_KEY_PATH" \
+            -authenticationKeyID "$API_KEY_ID" \
+            -authenticationKeyIssuerID "$API_ISSUER_ID" \
+            clean archive
+
+      # exportOptions.plist has destination=upload, so this uploads to App Store Connect / TestFlight
+      - name: Export and upload to App Store Connect
+        run: |
+          cd ios
+          xcodebuild -exportArchive \
+            -archivePath "$RUNNER_TEMP/OpenSpool.xcarchive" \
+            -exportOptionsPlist exportOptions.plist \
+            -exportPath "$RUNNER_TEMP/export" \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$API_KEY_PATH" \
+            -authenticationKeyID "$API_KEY_ID" \
+            -authenticationKeyIssuerID "$API_ISSUER_ID"

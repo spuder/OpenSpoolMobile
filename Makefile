@@ -10,20 +10,20 @@ ifeq ($(JAVA_HOME),)
   endif
 endif
 
-# Run iOS app
+# CocoaPods fails with an encoding error without a UTF-8 locale
+export LANG := en_US.UTF-8
+
+# Run iOS app (pass DEVICE="Device Name" to run on a physical device)
 run-ios:
-	npx react-native run-ios
-	xcodebuild -workspace openspool_app.xcworkspace \
-		-scheme openspool_app \
-		-destination "platform=iOS,name=Spencer Owen's iPhone" \
-		-allowProvisioningUpdates
+	npx react-native run-ios $(if $(DEVICE),--device "$(DEVICE)")
 
 run-android:
 	npx react-native run-android
 
 # Install iOS dependencies
 dep-ios:
-	cd ios && pod install && cd ..
+	bundle install
+	cd ios && bundle exec pod install
 
 # Build Android release
 android:

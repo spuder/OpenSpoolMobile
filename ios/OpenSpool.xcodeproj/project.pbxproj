@@ -16,11 +16,11 @@
 		3BD1DAF3095CCF696839AE75 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
 		3D6E352A2E80454F8A876F7F /* Orbitron-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 68AE5C4C61274F8280552725 /* Orbitron-SemiBold.ttf */; };
 		45273F0A4CC744058985557E /* Orbitron-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1116C7E7D8E14B3DB1940F76 /* Orbitron-Bold.ttf */; };
-		7CBE0C96FAC62CEF6C8D8F70 /* libPods-OpenSpool.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AB2B5FFECCD5E8B724FAFC2F /* libPods-OpenSpool.a */; };
+		64509EDBF46BA09423CDCC28 /* libPods-OpenSpool-OpenSpoolTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9293F10D90166DE8DD40C559 /* libPods-OpenSpool-OpenSpoolTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		C512806EBBED416CB839F9BA /* Orbitron-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 804E4655E0A040758F59C9BB /* Orbitron-Regular.ttf */; };
 		DBD0A697AA8D42FCA560E7EC /* Orbitron-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7F83C7D5CADB4D549DD42175 /* Orbitron-ExtraBold.ttf */; };
-		F34B300AC84FEF69FD04DD1B /* libPods-OpenSpool-OpenSpoolTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CBBCDBE26B8A162226B751D /* libPods-OpenSpool-OpenSpoolTests.a */; };
+		E34D8EF1C7E6C148BC380992 /* libPods-OpenSpool.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AD481782EA559CCA028DFF7 /* libPods-OpenSpool.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,9 +37,6 @@
 		00E356EE1AD99517003FC87E /* OpenSpoolTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenSpoolTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* OpenSpoolTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OpenSpoolTests.m; sourceTree = "<group>"; };
-		06022E22998F4D187D3F86E3 /* Pods-OpenSpool.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenSpool.debug.xcconfig"; path = "Target Support Files/Pods-OpenSpool/Pods-OpenSpool.debug.xcconfig"; sourceTree = "<group>"; };
-		0CBBCDBE26B8A162226B751D /* libPods-OpenSpool-OpenSpoolTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OpenSpool-OpenSpoolTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		0CC2644FEBBFF618393DBA7F /* Pods-OpenSpool-OpenSpoolTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenSpool-OpenSpoolTests.debug.xcconfig"; path = "Target Support Files/Pods-OpenSpool-OpenSpoolTests/Pods-OpenSpool-OpenSpoolTests.debug.xcconfig"; sourceTree = "<group>"; };
 		1116C7E7D8E14B3DB1940F76 /* Orbitron-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Orbitron-Bold.ttf"; path = "../assets/fonts/Orbitron-Bold.ttf"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* OpenSpool.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OpenSpool.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = OpenSpool/AppDelegate.h; sourceTree = "<group>"; };
@@ -48,15 +45,18 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = OpenSpool/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = OpenSpool/main.m; sourceTree = "<group>"; };
 		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = OpenSpool/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		2A6F9835E76BA7D3FF34ABD6 /* Pods-OpenSpool-OpenSpoolTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenSpool-OpenSpoolTests.release.xcconfig"; path = "Target Support Files/Pods-OpenSpool-OpenSpoolTests/Pods-OpenSpool-OpenSpoolTests.release.xcconfig"; sourceTree = "<group>"; };
+		3AD481782EA559CCA028DFF7 /* libPods-OpenSpool.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OpenSpool.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4EC4FD2B2D3422530080FAB2 /* OpenSpool.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = OpenSpool.entitlements; path = OpenSpool/OpenSpool.entitlements; sourceTree = "<group>"; };
+		55BD1161B7BB409E8F795E60 /* Pods-OpenSpool.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenSpool.debug.xcconfig"; path = "Target Support Files/Pods-OpenSpool/Pods-OpenSpool.debug.xcconfig"; sourceTree = "<group>"; };
 		591C4798DBAB41DEA723F844 /* Orbitron-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Orbitron-Black.ttf"; path = "../assets/fonts/Orbitron-Black.ttf"; sourceTree = "<group>"; };
+		666E03445CE2D59B48AD4826 /* Pods-OpenSpool.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenSpool.release.xcconfig"; path = "Target Support Files/Pods-OpenSpool/Pods-OpenSpool.release.xcconfig"; sourceTree = "<group>"; };
 		68AE5C4C61274F8280552725 /* Orbitron-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Orbitron-SemiBold.ttf"; path = "../assets/fonts/Orbitron-SemiBold.ttf"; sourceTree = "<group>"; };
-		7D395D6F2954BA1FCEA07A3F /* Pods-OpenSpool-OpenSpoolTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenSpool-OpenSpoolTests.release.xcconfig"; path = "Target Support Files/Pods-OpenSpool-OpenSpoolTests/Pods-OpenSpool-OpenSpoolTests.release.xcconfig"; sourceTree = "<group>"; };
 		7F83C7D5CADB4D549DD42175 /* Orbitron-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Orbitron-ExtraBold.ttf"; path = "../assets/fonts/Orbitron-ExtraBold.ttf"; sourceTree = "<group>"; };
 		804E4655E0A040758F59C9BB /* Orbitron-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Orbitron-Regular.ttf"; path = "../assets/fonts/Orbitron-Regular.ttf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = OpenSpool/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		AB2B5FFECCD5E8B724FAFC2F /* libPods-OpenSpool.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OpenSpool.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B4BF82A30F791ABE72842525 /* Pods-OpenSpool.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenSpool.release.xcconfig"; path = "Target Support Files/Pods-OpenSpool/Pods-OpenSpool.release.xcconfig"; sourceTree = "<group>"; };
+		9293F10D90166DE8DD40C559 /* libPods-OpenSpool-OpenSpoolTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OpenSpool-OpenSpoolTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		96D1C698804F8F7505AFE8EC /* Pods-OpenSpool-OpenSpoolTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenSpool-OpenSpoolTests.debug.xcconfig"; path = "Target Support Files/Pods-OpenSpool-OpenSpoolTests/Pods-OpenSpool-OpenSpoolTests.debug.xcconfig"; sourceTree = "<group>"; };
 		C64BF252F88448178DDB2339 /* Orbitron-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Orbitron-Medium.ttf"; path = "../assets/fonts/Orbitron-Medium.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -66,7 +66,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F34B300AC84FEF69FD04DD1B /* libPods-OpenSpool-OpenSpoolTests.a in Frameworks */,
+				64509EDBF46BA09423CDCC28 /* libPods-OpenSpool-OpenSpoolTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -74,7 +74,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7CBE0C96FAC62CEF6C8D8F70 /* libPods-OpenSpool.a in Frameworks */,
+				E34D8EF1C7E6C148BC380992 /* libPods-OpenSpool.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -117,8 +117,8 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				AB2B5FFECCD5E8B724FAFC2F /* libPods-OpenSpool.a */,
-				0CBBCDBE26B8A162226B751D /* libPods-OpenSpool-OpenSpoolTests.a */,
+				3AD481782EA559CCA028DFF7 /* libPods-OpenSpool.a */,
+				9293F10D90166DE8DD40C559 /* libPods-OpenSpool-OpenSpoolTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -171,10 +171,10 @@
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				06022E22998F4D187D3F86E3 /* Pods-OpenSpool.debug.xcconfig */,
-				B4BF82A30F791ABE72842525 /* Pods-OpenSpool.release.xcconfig */,
-				0CC2644FEBBFF618393DBA7F /* Pods-OpenSpool-OpenSpoolTests.debug.xcconfig */,
-				7D395D6F2954BA1FCEA07A3F /* Pods-OpenSpool-OpenSpoolTests.release.xcconfig */,
+				55BD1161B7BB409E8F795E60 /* Pods-OpenSpool.debug.xcconfig */,
+				666E03445CE2D59B48AD4826 /* Pods-OpenSpool.release.xcconfig */,
+				96D1C698804F8F7505AFE8EC /* Pods-OpenSpool-OpenSpoolTests.debug.xcconfig */,
+				2A6F9835E76BA7D3FF34ABD6 /* Pods-OpenSpool-OpenSpoolTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -186,12 +186,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "OpenSpoolTests" */;
 			buildPhases = (
-				95A010AE9F038F081947BFB9 /* [CP] Check Pods Manifest.lock */,
+				4F0111881343BA8BEBCFE2C9 /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				CBB825377B57F291A096118F /* [CP] Embed Pods Frameworks */,
-				21E9F8A4A467BF0ED0DB1272 /* [CP] Copy Pods Resources */,
+				C5C3450EECA1EB17F12D3DB6 /* [CP] Embed Pods Frameworks */,
+				A63B23E05A9A8690D62D8894 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -207,13 +207,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "OpenSpool" */;
 			buildPhases = (
-				F08AD5FB1F7B73D4E421D043 /* [CP] Check Pods Manifest.lock */,
+				8D6596DC5F25BB4F6BA6FA23 /* [CP] Check Pods Manifest.lock */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				9F21D0412F524B11DD022D44 /* [CP] Embed Pods Frameworks */,
-				69C7A9327A03CA7E876B68C6 /* [CP] Copy Pods Resources */,
+				B84827292B67ACBAC508C677 /* [CP] Embed Pods Frameworks */,
+				1C44C531EEF7AE3A34584576 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -304,24 +304,7 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"$REACT_NATIVE_PATH/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"$REACT_NATIVE_PATH/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
 		};
-		21E9F8A4A467BF0ED0DB1272 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-OpenSpool-OpenSpoolTests/Pods-OpenSpool-OpenSpoolTests-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-OpenSpool-OpenSpoolTests/Pods-OpenSpool-OpenSpoolTests-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OpenSpool-OpenSpoolTests/Pods-OpenSpool-OpenSpoolTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		69C7A9327A03CA7E876B68C6 /* [CP] Copy Pods Resources */ = {
+		1C44C531EEF7AE3A34584576 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -338,7 +321,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OpenSpool/Pods-OpenSpool-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		95A010AE9F038F081947BFB9 /* [CP] Check Pods Manifest.lock */ = {
+		4F0111881343BA8BEBCFE2C9 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -360,41 +343,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		9F21D0412F524B11DD022D44 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-OpenSpool/Pods-OpenSpool-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-OpenSpool/Pods-OpenSpool-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OpenSpool/Pods-OpenSpool-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		CBB825377B57F291A096118F /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-OpenSpool-OpenSpoolTests/Pods-OpenSpool-OpenSpoolTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-OpenSpool-OpenSpoolTests/Pods-OpenSpool-OpenSpoolTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OpenSpool-OpenSpoolTests/Pods-OpenSpool-OpenSpoolTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		F08AD5FB1F7B73D4E421D043 /* [CP] Check Pods Manifest.lock */ = {
+		8D6596DC5F25BB4F6BA6FA23 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -414,6 +363,57 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A63B23E05A9A8690D62D8894 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-OpenSpool-OpenSpoolTests/Pods-OpenSpool-OpenSpoolTests-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-OpenSpool-OpenSpoolTests/Pods-OpenSpool-OpenSpoolTests-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OpenSpool-OpenSpoolTests/Pods-OpenSpool-OpenSpoolTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B84827292B67ACBAC508C677 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-OpenSpool/Pods-OpenSpool-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-OpenSpool/Pods-OpenSpool-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OpenSpool/Pods-OpenSpool-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C5C3450EECA1EB17F12D3DB6 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-OpenSpool-OpenSpoolTests/Pods-OpenSpool-OpenSpoolTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-OpenSpool-OpenSpoolTests/Pods-OpenSpool-OpenSpoolTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OpenSpool-OpenSpoolTests/Pods-OpenSpool-OpenSpoolTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -449,7 +449,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0CC2644FEBBFF618393DBA7F /* Pods-OpenSpool-OpenSpoolTests.debug.xcconfig */;
+			baseConfigurationReference = 96D1C698804F8F7505AFE8EC /* Pods-OpenSpool-OpenSpoolTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = MDV7B53NY3;
@@ -477,7 +477,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7D395D6F2954BA1FCEA07A3F /* Pods-OpenSpool-OpenSpoolTests.release.xcconfig */;
+			baseConfigurationReference = 2A6F9835E76BA7D3FF34ABD6 /* Pods-OpenSpool-OpenSpoolTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
@@ -502,24 +502,25 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 06022E22998F4D187D3F86E3 /* Pods-OpenSpool.debug.xcconfig */;
+			baseConfigurationReference = 55BD1161B7BB409E8F795E60 /* Pods-OpenSpool.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = OpenSpool/OpenSpool.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = MDV7B53NY3;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = OpenSpool/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = OpenSpool;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.3;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -541,23 +542,24 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B4BF82A30F791ABE72842525 /* Pods-OpenSpool.release.xcconfig */;
+			baseConfigurationReference = 666E03445CE2D59B48AD4826 /* Pods-OpenSpool.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = OpenSpool/OpenSpool.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = MDV7B53NY3;
 				INFOPLIST_FILE = OpenSpool/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = OpenSpool;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.3;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -647,7 +649,10 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = "$(inherited)  ";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					" ",
+				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
@@ -718,7 +723,10 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = "$(inherited)  ";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					" ",
+				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
