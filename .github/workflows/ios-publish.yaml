@@ -2,8 +2,12 @@ name: OpenSpool iOS Publisher
 
 on:
   push:
+    # Stable versions only (v1.4 / v1.4.0), same as the Android publisher. Prerelease tags
+    # (v1.4.0-beta1) are skipped: iOS versions can't carry a suffix, and reusing the release's
+    # build number would block the final upload.
     tags:
-      - 'v*'
+      - 'v[0-9]+.[0-9]+'
+      - 'v[0-9]+.[0-9]+.[0-9]+'
   workflow_dispatch:
 
 permissions:
@@ -34,6 +38,24 @@ jobs:
             echo "::error::Tag ${GITHUB_REF_NAME} ($GITHUB_SHA) is not on ${{ github.event.repository.default_branch }}; refusing to publish."
             exit 1
           fi
+
+      # v1.4.0 -> MARKETING_VERSION 1.4.0, CURRENT_PROJECT_VERSION 10400 (same scheme as Android versionCode)
+      - name: Derive version from tag
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          if [[ ! "$version" =~ ^([0-9]+)\.([0-9]+)(\.([0-9]+))?$ ]]; then
+            echo "::error::Tag ${GITHUB_REF_NAME} must look like v1.4 or v1.4.0 (no prerelease suffix) to publish iOS."
+            exit 1
+          fi
+          major=${BASH_REMATCH[1]} minor=${BASH_REMATCH[2]} patch=${BASH_REMATCH[4]:-0}
+          if (( 10#$minor > 99 || 10#$patch > 99 )); then
+            echo "::error::Tag ${GITHUB_REF_NAME}: minor and patch must be below 100."
+            exit 1
+          fi
+          build=$(( 10#$major * 10000 + 10#$minor * 100 + 10#$patch ))
+          echo "MARKETING_VERSION=$version" >> "$GITHUB_ENV"
+          echo "BUILD_NUMBER=$build" >> "$GITHUB_ENV"
+          echo "Publishing iOS $version ($build)"
 
       - name: Select Xcode
         uses: maxim-lobanov/setup-xcode@v1
@@ -84,6 +106,8 @@ jobs:
             -authenticationKeyPath "$API_KEY_PATH" \
             -authenticationKeyID "$API_KEY_ID" \
             -authenticationKeyIssuerID "$API_ISSUER_ID" \
+            MARKETING_VERSION="$MARKETING_VERSION" \
+            CURRENT_PROJECT_VERSION="$BUILD_NUMBER" \
             clean archive
 
       # exportOptions.plist has destination=upload, so this uploads to App Store Connect / TestFlight
