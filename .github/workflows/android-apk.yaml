@@ -7,13 +7,19 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  apk:
+  build:
     runs-on: ubuntu-latest
+    # Signing secrets live in this environment: v* tags / main only, and spuder must approve each run
+    environment: android-release
+    outputs:
+      name: ${{ steps.apk.outputs.name }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -21,8 +27,9 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
+      # No install scripts: nothing in the build needs them, and this job holds the signing key
       - name: Install Dependencies
-        run: npm ci
+        run: npm ci --ignore-scripts
 
       - name: Set up JDK
         uses: actions/setup-java@v4
@@ -36,19 +43,20 @@ jobs:
           ANDROID_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE }}
         run: echo "$ANDROID_KEYSTORE" | base64 --decode > "$RUNNER_TEMP/openspool.keystore"
 
+      # Gradle reads ORG_GRADLE_PROJECT_* env vars as project properties, keeping secrets off the command line
       - name: Build signed release APK
         env:
-          STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          ORG_GRADLE_PROJECT_OPENSPOOL_UPLOAD_STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ORG_GRADLE_PROJECT_OPENSPOOL_UPLOAD_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ORG_GRADLE_PROJECT_OPENSPOOL_UPLOAD_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
+          export ORG_GRADLE_PROJECT_OPENSPOOL_UPLOAD_STORE_FILE="$RUNNER_TEMP/openspool.keystore"
+          # Tags set versionName/versionCode (v1.4.0 -> 1.4.0 / 10400); manual runs keep build.gradle's fallback
+          if [[ "$GITHUB_REF_TYPE" == "tag" ]]; then
+            export ORG_GRADLE_PROJECT_OPENSPOOL_VERSION="${GITHUB_REF_NAME#v}"
+          fi
           cd android
-          ./gradlew assembleRelease \
-            -PreactNativeArchitectures=armeabi-v7a,arm64-v8a \
-            -POPENSPOOL_UPLOAD_STORE_FILE="$RUNNER_TEMP/openspool.keystore" \
-            -POPENSPOOL_UPLOAD_STORE_PASSWORD="$STORE_PASSWORD" \
-            -POPENSPOOL_UPLOAD_KEY_ALIAS="$KEY_ALIAS" \
-            -POPENSPOOL_UPLOAD_KEY_PASSWORD="$KEY_PASSWORD"
+          ./gradlew assembleRelease -PreactNativeArchitectures=armeabi-v7a,arm64-v8a
 
       - name: Name APK
         id: apk
@@ -66,11 +74,27 @@ jobs:
           name: ${{ steps.apk.outputs.name }}
           path: dist/*
 
+  # Separate job so the write token never shares a runner with npm packages or the signing key
+  release:
+    if: github.ref_type == 'tag'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.build.outputs.name }}
+          path: dist
+
       - name: Attach to GitHub Release
-        if: github.ref_type == 'tag'
         env:
           GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
         run: |
+          # Tags with a suffix (v1.4.0-beta1) become prereleases, so releases/latest stays on a stable build
+          PRERELEASE=""
+          if [[ "$GITHUB_REF_NAME" == *-* ]]; then PRERELEASE="--prerelease"; fi
           gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1 \
-            || gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --generate-notes
+            || gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --generate-notes $PRERELEASE
           gh release upload "$GITHUB_REF_NAME" dist/* --clobber

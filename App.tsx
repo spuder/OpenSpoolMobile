@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {
-  SafeAreaView,
   ScrollView,
   View,
   Text,
@@ -14,6 +13,10 @@ import {
 } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import NfcManager, { NfcTech, Ndef, NfcError, NdefRecord } from 'react-native-nfc-manager';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+
+// Android can also detect blank tags that were never NDEF-formatted; iOS only exposes Ndef
+const NDEF_TECHS = Platform.OS === 'android' ? [NfcTech.Ndef, NfcTech.NdefFormatable] : NfcTech.Ndef;
 
 // Thrown when a tag was read but doesn't hold usable OpenSpool data
 class TagFormatError extends Error {}
@@ -258,7 +261,11 @@ const OpenSpool = () => {
         setReadTagModalOpen(true);
       }
 
-      await NfcManager.requestTechnology(NfcTech.Ndef);
+      const tech = await NfcManager.requestTechnology(NDEF_TECHS);
+      if (tech === NfcTech.NdefFormatable) {
+        Alert.alert('Empty tag detected.');
+        return;
+      }
       const tag = await NfcManager.getTag();
 
       if (!tag?.ndefMessage?.length) {
@@ -325,7 +332,7 @@ const OpenSpool = () => {
         setReadTagModalOpen(true);
       }
 
-      await NfcManager.requestTechnology(NfcTech.Ndef);
+      const tech = await NfcManager.requestTechnology(NDEF_TECHS);
 
       const jsonData = {
         version: '1.0',
@@ -342,7 +349,12 @@ const OpenSpool = () => {
       const bytes = await Ndef.encodeMessage([ndefRecords]);
 
       if (bytes) {
-        await NfcManager.ndefHandler.writeNdefMessage(bytes);
+        if (tech === NfcTech.NdefFormatable) {
+          // Blank tags are formatted and written in one step
+          await NfcManager.ndefFormatableHandlerAndroid.formatNdef(bytes);
+        } else {
+          await NfcManager.ndefHandler.writeNdefMessage(bytes);
+        }
         Alert.alert('Tag written.');
       }
     } catch (error) {
@@ -785,4 +797,11 @@ const styles = StyleSheet.create({
   },
 });
 
-export default OpenSpool;
+// SafeAreaProvider supplies the status/navigation bar insets (Android draws edge-to-edge from API 35)
+const App = () => (
+  <SafeAreaProvider>
+    <OpenSpool />
+  </SafeAreaProvider>
+);
+
+export default App;

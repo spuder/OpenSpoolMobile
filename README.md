@@ -33,9 +33,13 @@ Reads/Writes NFC tags for 3d printer filament.
 
 # Releasing
 
-```
-Change version number in android/app/build.gradle
-make android
-```
+### Android
+
+Push a version tag; the Android version comes from the tag (`v1.4.0` → versionName `1.4.0`, versionCode `10400`):
+
+- `v1.4.0` (stable): builds a sideload APK attached to the GitHub Release, and uploads an AAB to the Play Store internal track (promote it to production in Play Console).
+- `v1.4.0-beta1` (prerelease): sideload APK only, published as a GitHub prerelease.
+
+Local release builds (`make android`) read the signing key from `OPENSPOOL_UPLOAD_*` in `~/.gradle/gradle.properties`, and fall back to the version in `android/app/build.gradle` unless you pass `-POPENSPOOL_VERSION=1.4.0`.
 
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/openspool)
