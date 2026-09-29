@@ -116,6 +116,8 @@ const OpenSpool = () => {
     { label: 'Black', value: 'black', hex: '161616' },
   ];
 
+  // Values are written to the tag and must exactly match (case-sensitive) the
+  // filament_mappings names in the OpenSpool firmware (firmware/bambu.h)
   const types = [
     { label: 'ABS', value: 'ABS' },
     { label: 'ASA', value: 'ASA' },
