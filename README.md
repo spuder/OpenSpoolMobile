@@ -9,6 +9,8 @@ Companion app for the OpenSpool Project https://github.com/spuder/OpenSpool
 
 ## Android: https://play.google.com/store/apps/details?id=io.openspool&utm_source=na_Med
 
+Sideload APK: download `OpenSpool-<version>.apk` from the [latest release](https://github.com/spuder/OpenSpoolMobile/releases/latest). If you already have the Play Store version installed, uninstall it first (the signatures differ).
+
 ## iOS: https://apps.apple.com/us/app/openspool/id6740551901
 
 
