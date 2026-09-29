@@ -2,14 +2,21 @@ name: OpenSpool Android Publisher
 
 on:
   push:
+    # Stable versions only (v1.4 / v1.4.0); prerelease tags like v1.4.0-beta1 are sideload-only
     tags:
-      - 'v*'
+      - 'v[0-9]+.[0-9]+'
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+
+permissions:
+  contents: read
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -17,9 +24,9 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
+      # No install scripts: nothing in the build needs them, and this job holds the signing key
       - name: Install Dependencies
-        run: |
-          npm ci
+        run: npm ci --ignore-scripts
 
       - name: Set up JDK
         uses: actions/setup-java@v4
@@ -33,24 +40,25 @@ jobs:
           ANDROID_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE }}
         run: echo "$ANDROID_KEYSTORE" | base64 --decode > "$RUNNER_TEMP/openspool.keystore"
 
+      # Gradle reads ORG_GRADLE_PROJECT_* env vars as project properties, keeping secrets off the command line
       - name: Build signed release AAB
         env:
-          STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          ORG_GRADLE_PROJECT_OPENSPOOL_UPLOAD_STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ORG_GRADLE_PROJECT_OPENSPOOL_UPLOAD_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ORG_GRADLE_PROJECT_OPENSPOOL_UPLOAD_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
+          export ORG_GRADLE_PROJECT_OPENSPOOL_UPLOAD_STORE_FILE="$RUNNER_TEMP/openspool.keystore"
+          # v1.4.0 -> versionName 1.4.0 / versionCode 10400
+          export ORG_GRADLE_PROJECT_OPENSPOOL_VERSION="${GITHUB_REF_NAME#v}"
           cd android
-          ./gradlew bundleRelease \
-            -POPENSPOOL_UPLOAD_STORE_FILE="$RUNNER_TEMP/openspool.keystore" \
-            -POPENSPOOL_UPLOAD_STORE_PASSWORD="$STORE_PASSWORD" \
-            -POPENSPOOL_UPLOAD_KEY_ALIAS="$KEY_ALIAS" \
-            -POPENSPOOL_UPLOAD_KEY_PASSWORD="$KEY_PASSWORD"
+          ./gradlew bundleRelease
 
+      # Goes to the internal track; promote to production from Play Console after testing
       - name: Upload to Play Store
-        uses: r0adkll/upload-google-play@v1
+        uses: r0adkll/upload-google-play@e738b9dd8f2476ea806d921b64aacd24f34515a5 # v1
         with:
           serviceAccountJsonPlainText: ${{ secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON }}
           packageName: io.openspool
           releaseFiles: android/app/build/outputs/bundle/release/app-release.aab
-          track: production
+          track: internal
           status: completed

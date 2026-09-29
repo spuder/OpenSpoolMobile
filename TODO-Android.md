@@ -15,7 +15,7 @@ Android build, signing and release tasks. iOS items are tracked separately.
 - [x] `.github/workflows/android-apk.yaml`: signed arm-only release APK on `v*` tags (attached to the GitHub Release) and on manual runs (Actions artifact). README links `releases/latest`.
 - [ ] Run the workflow once on GitHub (needs the workflow committed + pushed).
 - [ ] Smoke-test a release APK on a real device.
-- [ ] Note: pushing a `v*` tag also triggers `android-publish.yaml`, which will fail at the Play upload until `PLAY_STORE_SERVICE_ACCOUNT_JSON` exists.
+- [ ] Note: pushing a stable tag (`v1.4.0`) also triggers `android-publish.yaml`, which will fail at the Play upload until `PLAY_STORE_SERVICE_ACCOUNT_JSON` exists.
 
 ## Review findings (2026-09-28)
 
@@ -23,7 +23,7 @@ Android build, signing and release tasks. iOS items are tracked separately.
 - [x] NFC cancel is awaited and buttons are disabled while a session is active (fixes stuck "Waiting for tag..." on quick retries).
 - [x] Tag parsing: finds the `application/json` record, decodes UTF-8, validates `protocol`/fields before touching state, alerts on bad tags and on unknown color/type.
 - [x] Release builds fail if the `OPENSPOOL_UPLOAD_*` signing properties are missing; Play workflow now signs in Gradle (dropped `r0adkll/sign-android-release`) and uses v4 actions.
-- [ ] Raise `targetSdkVersion` to 35+ (Play requirement) and handle edge-to-edge (`SafeAreaView` is a no-op on Android).
-- [ ] Derive `versionCode`/`versionName` from the tag (or bump before tagging); don't send every `v*` tag straight to the production track.
-- [ ] Possible: request `NfcTech.NdefFormatable` too, so blank unformatted tags can be written.
-- [ ] Harden `android-apk.yaml`: `persist-credentials: false`, signing props via `ORG_GRADLE_PROJECT_*` env, release upload in a separate job; SHA-pin third-party actions.
+- [x] Target/compile SDK 36 (Play requirement since 2026-08-31); edge-to-edge handled with `react-native-safe-area-context`, light system-bar icons, predictive back opted out. AGP 8.6 warns about compileSdk 36; an RN upgrade would clear it.
+- [x] Version derived from the tag via `OPENSPOOL_VERSION`; Play publishing runs on stable tags only and uploads to the internal track.
+- [x] Android requests `NdefFormatable` too: blank unformatted tags read as empty and are formatted on write.
+- [x] Workflow hardening: `persist-credentials: false`, `npm ci --ignore-scripts`, signing props via `ORG_GRADLE_PROJECT_*` env, release upload in its own job, `upload-google-play` SHA-pinned.
