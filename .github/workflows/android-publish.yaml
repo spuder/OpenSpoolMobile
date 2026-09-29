@@ -13,6 +13,8 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    # Signing secrets live in this environment: v* tags / main only, and spuder must approve each run
+    environment: android-release
     steps:
       - uses: actions/checkout@v4
         with:

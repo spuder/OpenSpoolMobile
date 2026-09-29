@@ -12,6 +12,8 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # Signing secrets live in this environment: v* tags / main only, and spuder must approve each run
+    environment: android-release
     outputs:
       name: ${{ steps.apk.outputs.name }}
     steps:

@@ -6,7 +6,7 @@ Android build, signing and release tasks. iOS items are tracked separately.
 
 - [x] Point `~/.gradle/gradle.properties` `OPENSPOOL_UPLOAD_STORE_FILE` at `android/app/openspool.keystore` in this checkout (backup: `~/.gradle/gradle.properties.bak-2026-09-28`).
 - [x] 1Password note "Android Studio Keystore": alias fixed to `key0`, store path updated, keystore attached (verified byte-identical).
-- [x] GitHub Actions secrets on `spuder/OpenSpoolMobile`: `ANDROID_KEYSTORE` (base64), `ANDROID_KEY_ALIAS`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_PASSWORD`.
+- [x] GitHub Actions secrets in the protected `android-release` environment (v* tags + main, spuder approves each run): `ANDROID_KEYSTORE` (base64), `ANDROID_KEY_ALIAS`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_PASSWORD`.
 - [ ] `PLAY_STORE_SERVICE_ACCOUNT_JSON` secret (Google Cloud service account with Play Console access) — not found locally.
 - [ ] Confirm keystore SHA1 `82:4F:86:9D:99:CF:96:55:D5:2B:5B:32:45:49:ED:58:F8:E6:79:6B` matches the upload key in Play Console → App integrity.
 
