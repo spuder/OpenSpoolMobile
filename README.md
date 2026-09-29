@@ -33,9 +33,11 @@ Reads/Writes NFC tags for 3d printer filament.
 
 # Releasing
 
-```
-Change version number in android/app/build.gradle
-make android
-```
+1. Bump the version on both platforms (keep them in sync):
+   - Android: `versionCode` and `versionName` in `android/app/build.gradle`
+   - iOS: `CURRENT_PROJECT_VERSION` (= `versionCode`) and `MARKETING_VERSION` (= `versionName`) in `ios/OpenSpool.xcodeproj/project.pbxproj`
+2. Build locally with `make android` (release AAB), or push a `v*` tag to run the GitHub Actions publish workflows for the Play Store and TestFlight.
+
+Local Android release builds read the signing key from `OPENSPOOL_UPLOAD_*` properties in `~/.gradle/gradle.properties`.
 
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/openspool)
