@@ -19,7 +19,7 @@ const OpenSpool = () => {
   const [isLoading, setIsLoading] = useState(true);
   const rotateAnim = useRef(new Animated.Value(0)).current;
   const [color, setColor] = useState('magenta');
-  const [type, setType] = useState('pla');
+  const [type, setType] = useState('PLA');
   const [minTemp, setMinTemp] = useState('180');
   const [maxTemp, setMaxTemp] = useState('210');
   const [modalTitle, setModalTitle] = useState('Read Tag');
@@ -67,26 +67,77 @@ const OpenSpool = () => {
     { label: 'Black', value: 'black', hex: '161616' },
   ];
 
+  // Values are written to the tag and must exactly match (case-sensitive) the
+  // filament_mappings names in the OpenSpool firmware (firmware/bambu.h)
   const types = [
-    { label: 'PLA', value: 'pla' },
-    { label: 'PETG', value: 'petg' },
-    { label: 'ABS', value: 'abs' },
-    { label: 'TPU', value: 'tpu' },
-    { label: 'Nylon', value: 'nylon' },
+    { label: 'ABS', value: 'ABS' },
+    { label: 'ASA', value: 'ASA' },
+    { label: 'BVOH', value: 'BVOH' },
+    { label: 'EVA', value: 'EVA' },
+    { label: 'HIPS', value: 'HIPS' },
+    { label: 'PA', value: 'PA' },
+    { label: 'PA-CF', value: 'PA-CF' },
+    { label: 'PC', value: 'PC' },
+    { label: 'PCTG', value: 'PCTG' },
+    { label: 'PE', value: 'PE' },
+    { label: 'PE-CF', value: 'PE-CF' },
+    { label: 'PETG', value: 'PETG' },
+    { label: 'PET-CF', value: 'PET-CF' },
+    { label: 'PLA', value: 'PLA' },
+    { label: 'PLA High Speed', value: 'PLA High Speed' },
+    { label: 'PLA Silk', value: 'PLA Silk' },
+    { label: 'PLA-CF', value: 'PLA-CF' },
+    { label: 'PP', value: 'PP' },
+    { label: 'PP-CF', value: 'PP-CF' },
+    { label: 'PP-GF', value: 'PP-GF' },
+    { label: 'PPA-CF', value: 'PPA-CF' },
+    { label: 'PPA-GF', value: 'PPA-GF' },
+    { label: 'PVA', value: 'PVA' },
+    { label: 'TPU', value: 'TPU' },
+    { label: 'TPU High Speed', value: 'TPU High Speed' },
+    { label: 'TPU for AMS', value: 'TPU for AMS' },
   ];
 
-  const temperatures = Array.from({ length: 21 }, (_, i) => ({
-    label: `${180 + i * 5}°C`,
-    value: (180 + i * 5).toString(),
+  // Legacy type values written by older versions of the app
+  const typeAliases: { [key: string]: string } = {
+    nylon: 'PA',
+  };
+
+  // 170-320°C covers every default in filamentDefaults
+  const temperatures = Array.from({ length: 31 }, (_, i) => ({
+    label: `${170 + i * 5}°C`,
+    value: (170 + i * 5).toString(),
   }));
 
-  const filamentDefaults = {
-    pla: { minTemp: 190, maxTemp: 240 },
-    petg: { minTemp: 220, maxTemp: 270 },
-    abs: { minTemp: 240, maxTemp: 280 },
-    gpu: { minTemp: 200, maxTemp: 250 },
-    tpu: { minTemp: 200, maxTemp: 250 },
-    nylon: { minTemp: 190, maxTemp: 240 },
+  // Nozzle temperature ranges from Bambu Studio's Generic filament profiles
+  // https://github.com/bambulab/BambuStudio/tree/master/resources/profiles/BBL/filament
+  const filamentDefaults: { [key: string]: { minTemp: number; maxTemp: number } } = {
+    ABS: { minTemp: 240, maxTemp: 280 },
+    ASA: { minTemp: 240, maxTemp: 280 },
+    BVOH: { minTemp: 190, maxTemp: 240 },
+    EVA: { minTemp: 175, maxTemp: 220 },
+    HIPS: { minTemp: 220, maxTemp: 270 },
+    PA: { minTemp: 240, maxTemp: 280 },
+    'PA-CF': { minTemp: 260, maxTemp: 300 },
+    PC: { minTemp: 260, maxTemp: 290 },
+    PCTG: { minTemp: 240, maxTemp: 270 },
+    PE: { minTemp: 175, maxTemp: 220 },
+    'PE-CF': { minTemp: 175, maxTemp: 220 },
+    PETG: { minTemp: 220, maxTemp: 270 },
+    'PET-CF': { minTemp: 260, maxTemp: 290 }, // Bambu PET-CF (no Generic profile)
+    PLA: { minTemp: 190, maxTemp: 240 },
+    'PLA High Speed': { minTemp: 190, maxTemp: 240 },
+    'PLA Silk': { minTemp: 190, maxTemp: 240 },
+    'PLA-CF': { minTemp: 190, maxTemp: 240 },
+    PP: { minTemp: 220, maxTemp: 250 },
+    'PP-CF': { minTemp: 220, maxTemp: 250 },
+    'PP-GF': { minTemp: 220, maxTemp: 250 },
+    'PPA-CF': { minTemp: 280, maxTemp: 320 },
+    'PPA-GF': { minTemp: 280, maxTemp: 320 },
+    PVA: { minTemp: 190, maxTemp: 240 },
+    TPU: { minTemp: 200, maxTemp: 250 },
+    'TPU High Speed': { minTemp: 200, maxTemp: 250 }, // Bambu TPU 95A HF
+    'TPU for AMS': { minTemp: 200, maxTemp: 250 },
   };
 
   const renderColorItem = (item: any) => {
@@ -163,10 +214,11 @@ const OpenSpool = () => {
 
         let jsonValue = JSON.parse(rawValue.toString());
         var nfcColor = colors.find(c => c.hex.toLowerCase() === jsonValue.color_hex.toLowerCase());
-        var nfcType = types.find(t => t.value.toLowerCase() === jsonValue.type.toLowerCase());
+        const tagType = typeAliases[jsonValue.type.toLowerCase()] ?? jsonValue.type;
+        var nfcType = types.find(t => t.value.toLowerCase() === tagType.toLowerCase());
 
         setColor(nfcColor?.value ?? 'blue');
-        setType(nfcType?.value ?? 'pla');
+        setType(nfcType?.value ?? 'PLA');
         setMinTemp(jsonValue.min_temp.toString());
         setMaxTemp(jsonValue.max_temp.toString());
       } else {
