@@ -20,8 +20,10 @@ iOS work lives on branch `ios/release-prep` (worktree `../OpenSpoolMobile-ios`).
 - [x] Membership renewed; Free Apps Agreement active through 2027-09-28. (Paid Apps Agreement not signed — only needed for paid apps/IAP.)
 - [x] App Store Connect API key "OpenSpool CI" (Admin, Key ID `T568F9M4T3`) created; `.p8` + Key ID + Issuer ID saved in 1Password (Private vault, item "OpenSpool CI").
 - [x] Secrets `APP_STORE_CONNECT_API_KEY_ID`, `APP_STORE_CONNECT_API_ISSUER_ID`, `APP_STORE_CONNECT_API_KEY_CONTENT` stored in the protected `app-store` GitHub environment (required reviewer: spuder; deployments only from `v*` tags). The workflow also refuses tags whose commit isn't on `main`, and never runs outside `spuder/OpenSpoolMobile`.
-- [ ] Decide on the build number: `CURRENT_PROJECT_VERSION` is `8`. Fine if 1.3 is a new version in App Store Connect; bump if a `1.3 (8)` was ever uploaded.
-- [ ] Merge `ios/release-prep` into `main`, then push a `v*` tag on `main` and approve the `app-store` deployment.
+- [x] iOS version/build number derived from the release tag (`v1.4.0` → `1.4.0 (10400)`), matching Android; prerelease tags skipped on iOS.
+- [x] `ios/release-prep` merged (#44).
+- [ ] After the Android stack (#42) lands on `main`: push a stable tag (e.g. `v1.4.0`) on `main` and approve the `app-store` deployment. Watch the first run — automatic signing with the API key is untested.
+- [ ] README "Releasing": add an iOS subsection (tag-based, stable tags only) once the Android agent's README conflict resolution lands.
 - [ ] Test NFC read/write on a physical iPhone with a Release build before submitting.
 
 ## Handed to the Android branch
