@@ -23,10 +23,10 @@ iOS work lives on branch `ios/release-prep` (worktree `../OpenSpoolMobile-ios`).
 - [x] iOS version/build number derived from the release tag (`v1.4.0` → `1.4.0 (10400)`), matching Android; prerelease tags skipped on iOS.
 - [x] `ios/release-prep` merged (#44).
 - [ ] After the Android stack (#42) lands on `main`: push a stable tag (e.g. `v1.4.0`) on `main` and approve the `app-store` deployment. Watch the first run — automatic signing with the API key is untested.
-- [ ] README "Releasing": add an iOS subsection (tag-based, stable tags only) once the Android agent's README conflict resolution lands.
+- [x] README "Releasing" covers both platforms' tag-based releases.
 - [ ] Test NFC read/write on a physical iPhone with a Release build before submitting.
 
-## Handed to the Android branch
+## Handed to the Android branch (done)
 
-- `~/.gradle/gradle.properties` `OPENSPOOL_UPLOAD_STORE_FILE` points at an old checkout path; keystore is `android/app/openspool.keystore` (alias `key0`, SHA1 `82:4F:86:9D:…:79:6B`). The 1Password note "Android Studio Keystore" lists the alias as `openspool` — should be `key0` — and doesn't contain the keystore file.
-- Android CI signing secrets and sideload APKs on GitHub Releases.
+- [x] `~/.gradle/gradle.properties` keystore path fixed; 1Password note "Android Studio Keystore" has alias `key0` and the keystore attached.
+- [x] Android signing secrets in the protected `android-release` environment; sideload APKs on GitHub Releases (#41, #42).
