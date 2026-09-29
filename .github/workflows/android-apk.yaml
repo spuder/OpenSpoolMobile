@@ -4,9 +4,6 @@ on:
   push:
     tags:
       - 'v*'
-    # TEMPORARY: build an artifact from this branch before merge; remove before merging to main
-    branches:
-      - android/sideload-apk
   workflow_dispatch:
 
 permissions:
